@@ -1,0 +1,61 @@
+2019-12-16  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* Makefile.in.in: Upgrade to gettext-0.19.8.1.
+	* Rules-quot: Upgrade to gettext-0.19.8.1.
+
+2003-02-08  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* de.po: Updated.
+
+	* Makevars: New file.
+
+	* Rules-quot, boldquot.sed, en@boldquot.header, en@quot.header,
+	insert-header.sin, quot.sed, remove-potcdate.sin: New files,
+	from gettext-0.11.5.
+
+1999-10-19  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* POTFILES.in: Added "apgp.c".
+
+1999-08-31  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* POTFILES.in: Added "util.c".
+
+1999-08-01  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* de.po: The project is now named "secret-agent".
+	Translated messages from "secret-query.c".
+
+1999-07-28  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* de.po: Updated.
+
+	* es_ES.po, fr.po, it.po, pl.po, pt_br.po, ru.po: Removed all
+	fuzzies since they are very probably wrong, anyway.
+
+1999-07-27  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* POTFILES.in: Added "client.c".
+	Added "secmem.c".
+	* de.po: Translated the messages from these files.
+
+1999-07-24  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* de.po: Incorporated the getopt-related translations from
+	glibc-2.1.1.
+
+1999-07-19  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* POTFILES.in: Added "lib/getopt.c".
+
+1999-06-28  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* POTFILES.in: Added "agentlib.c".
+	* de.po: Incorporated messages from that file.
+
+1999-06-14  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* de.po: New file.
+
+	* POTFILES.in: Added "agent.c".
+

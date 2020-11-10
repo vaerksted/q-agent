@@ -1,0 +1,166 @@
+<!-- q-client.sgml - man page source for q-client -->
+<!DOCTYPE RefEntry PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+  <!ENTITY query-options SYSTEM "query-options.sgml">
+  <!ENTITY trailer SYSTEM "trailer.sgml">
+]>
+
+<refentry>
+  <refmeta>
+    <refentrytitle>q-client</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo>Quintuple Agent</refmiscinfo>
+  </refmeta>
+  <refnamediv>
+    <refname>q-client</refname>
+    <refpurpose>interact with a <command>q-agent</command></refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>q-client</command>
+      <arg rep=repeat><replaceable>OPTION</replaceable></arg>
+      <arg choice="req">put</arg>
+      <arg choice="req"><replaceable>ID</replaceable></arg>
+      <arg><replaceable>COMMENT</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <command>q-client</command>
+      <arg rep=repeat><replaceable>OPTION</replaceable></arg>
+      <arg choice="req">get</arg>
+      <arg><replaceable>ID</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <command>q-client</command>
+      <arg rep=repeat><replaceable>OPTION</replaceable></arg>
+      <arg choice="req">delete</arg>
+      <arg><replaceable>ID</replaceable></arg>
+    </cmdsynopsis>
+    <cmdsynopsis>
+      <command>q-client</command>
+      <arg rep=repeat><replaceable>OPTION</replaceable></arg>
+      <arg choice="req">list</arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>Description</title>
+    <para>When <command>q-agent</command> is running,
+<command>q-client</command> can be used to communicate with it.
+Secrets can be listed (with <literal>list</literal>), stored (via
+<literal>put</literal>), fetched (using <literal>get</literal>), and
+finally removed (by <literal>delete</literal>)</para>
+    <para>All commands except <literal>list</literal> will have the
+<replaceable>ID</replaceable> as their first argument. This is an
+arbitrary string used to discern different secrets. Its content is up
+to you, but it usually pays off to stick to a convention. For example,
+when dealing with PGP/GPG passphrases, I recommend using the
+associated key id.</para>
+    <para>The following options are valid in combination with all
+commands:</para>
+    <variablelist>
+      <varlistentry>
+	<term><option/-d/, <option/--debug/</term>
+	<listitem>
+	  <para>turn on debugging output</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/--help/</term>
+	<listitem>
+	  <para>print a usage synopsis, then exit</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/--version/</term>
+	<listitem>
+	  <para>print version information, then exit</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <refsect2>
+      <title>list</title>
+      <para>The <literal>list</literal> command simply prints the
+meta-data of all known secrets, each on one line. The lines contain
+the following fields seperated by TAB: <simplelist>
+	  <member>the identification</member>
+	  <member>the date/time in ISO format, when the secret
+	      will be forgotten, or <literal>none</literal> if there
+	      is no deadline</member>
+	  <member>options enabled on the secret
+(<literal>insure</literal>, for example)</member>
+	  <member>an attached comment</member>
+	</simplelist>
+</para>
+    </refsect2>
+    <refsect2>
+      <title>put</title>
+      <para>To store a secret with the agent, the
+<literal>put</literal> command is used. It takes an
+<replaceable>ID</replaceable>, optionally followed by a
+<replaceable>COMMENT</replaceable>, as arguments.</para>
+      <para>The following options apply to <literal>put</literal>:</para>
+      <variablelist>
+        <varlistentry>
+	  <term><option/-i/, <option/--insure/</term>
+	  <listitem>
+	    <para>every time the agent is queried about this secret,
+	    it will ask for permission by popping up a dialog window.
+	    Note that if the agent is not running with access to a
+	    windowing system, the secret is virtually
+	    inaccessible.</para>
+	  </listitem>
+	</varlistentry>
+        <varlistentry>
+	  <term><option/-t/, <option/--time-to-live/ <replaceable/N/</term>
+	  <listitem>
+	    <para>instructs the agent to automatically forget this
+	    secret in <replaceable/N/ seconds.</para>
+	  </listitem>
+	</varlistentry>
+        <varlistentry>
+	  <term><option/-q/, <option/--query-options/ <replaceable/OPTIONS/</term>
+	  <listitem>
+	    <para>if the secret is queried with the help of an external
+program, the <replaceable/OPTIONS/ are passed to that program.
+&query-options;</para>
+	  </listitem>
+	</varlistentry>
+      </variablelist>
+    </refsect2>
+    <refsect2>
+      <title>get</title>
+      <para>Retrieval of a secret (specified by an
+<replaceable>ID</replaceable>) is accomplished with the
+<literal>get</literal> command. The secret is printed to
+<systemitem>STDOUT</systemitem>, <emphasis>unless</emphasis>
+<systemitem>STDOUT</systemitem> is a terminal - to prevent dumb
+errors.</para>
+    </refsect2>
+    <refsect2>
+      <title>delete</title>
+      <para><literal>delete</literal> instructs the agent to
+immediately forget the secret tagged by
+<replaceable>ID</replaceable>.</para>
+    </refsect2>
+  </refsect1>
+  <refsect1>
+    <title>Environment</title>
+    <variablelist>
+      <varlistentry>
+	<term>AGENT_SOCKET</term>
+	<listitem>
+	  <para><command>q-client</command> will use this
+	  variable to find the socket for communicating with the
+	  agent.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>See Also</title>
+    <simplelist>
+      <member><citerefentry>
+	  <refentrytitle>q-agent<manvolnum/1/
+	</citerefentry></member>
+    </simplelist>
+  </refsect1>
+&trailer;
+</refentry>

@@ -1,0 +1,106 @@
+<!-- q-agent.sgml - man page source for q-agent -->
+<!DOCTYPE RefEntry PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+  <!ENTITY query-options SYSTEM "query-options.sgml">
+  <!ENTITY trailer SYSTEM "trailer.sgml">
+]>
+
+<refentry>
+  <refmeta>
+    <refentrytitle>q-agent</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo>Quintuple Agent</refmiscinfo>
+  </refmeta>
+  <refnamediv>
+    <refname>q-agent</refname>
+    <refpurpose>store secrets in a safer way</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>eval `</command><command>q-agent</command>
+<arg rep=repeat><replaceable>OPTION</replaceable></arg><command> &amp;`
+</command>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>Description</title>
+    <para>Start an agent to hold secrets. Settings necessary to
+communicate with the daemon are printed to standard output. These should
+be captured, and evaluated in your shell, like shown in the
+synopsis.</para>
+    <para>Once <command>q-agent</command> is started, the
+programs listed under "See Also" can be used to store and retrieve secrets.</para>
+    <variablelist>
+      <varlistentry>
+	<term><option/-c/, <option/--csh/</term>
+	<listitem>
+	  <para>output commands compatible with csh-like shells - the
+default is to print bourne-shell compatible commands</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/-d/, <option/--debug/</term>
+	<listitem>
+	  <para>turn on debugging output, can be used up to two times
+to generate even more information - level two will output secrets,
+too, so beware!</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/-q/, <option/--query-options/ <replaceable/OPTIONS/</term>
+	  <listitem>
+	    <para>if a secret is queried on demand, the
+<replaceable/OPTIONS/ are passed to the program used to query it.
+&query-options;</para>
+	  </listitem>
+	</varlistentry>
+      <varlistentry>
+	<term><option/--fork/</term>
+	<listitem>
+	  <para>fork into the background - this will instruct the
+agent to act just like a daemon, i.e. it keeps on running, even after
+you log out.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/--help/</term>
+	<listitem>
+	  <para>print a usage synopsis, then exit</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term><option/--version/</term>
+	<listitem>
+	  <para>print version information, then exit</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>Environment</title>
+    <variablelist>
+      <varlistentry>
+	<term>AGENT_SOCKET</term>
+	<listitem>
+	  <para>Other programs will use this variable to find the socket for
+communicating with the agent. <command>q-agent</command> outputs
+code to set it to the right value.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>See Also</title>
+    <simplelist>
+      <member><citerefentry>
+	  <refentrytitle>q-client<manvolnum/1/
+	</citerefentry></member>
+      <member><citerefentry>
+	  <refentrytitle>agpg<manvolnum/1/
+	</citerefentry></member>
+      <member><citerefentry>
+	  <refentrytitle>apgp<manvolnum/1/
+	</citerefentry></member>
+    </simplelist>
+  </refsect1>
+&trailer;
+</refentry>

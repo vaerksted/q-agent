@@ -1,0 +1,70 @@
+2000-05-31  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* asprintf.c: If not even vsnprintf() is available, rely on
+	alternative implementation in vasprintf.c.
+
+	* asprintf.h: Play safe and include varargs if not std C.
+
+	* vasprintf.c, strdup.c, strdup.h: New files, implementation for
+	missing functions courtesy of libit.
+
+	* Makefile.am (EXTRA_libutil_a_SOURCES): Add new files.
+
+1999-10-19  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* Makefile.am (EXTRA_libutil_a_SOURCES): Rename getdelim.h here, too.
+
+1999-09-08  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* getdelim.c, getline.c: Renamed getdelim.c to getline.c.
+	* getdelim.h, getline.h: Renamed getdelim.h to getline.h.
+
+1999-09-01  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* setenv.c: Declare environ, would not compile on Solaris
+	otherwise.
+
+1999-08-31  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* asprintf.h: Don't declare (v)asprintf, if HAVE_ASPRINTF is
+	defined.
+
+1999-08-27  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* setenv.c (setenv): Freeing the string that was given to putenv() 
+	is illegal under Unix98 and breaks on several systems.
+	(unsetenv): Using putenv("VAR") to remove the definition of VAR
+	apparently is a GNU extension. So just frob environ directly.
+
+1999-08-25  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* setenv.c: Instrumented with testing code.
+
+1999-08-20  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* setenv.c: New file.
+	* setenv.h: New file.
+	* Makefile.am (EXTRA_libutil_a_SOURCES): Added it.
+
+1999-08-09  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* getdelim.h: Only declare getline, getdelim if not provided by OS.
+
+1999-08-05  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* getdelim.c: New file.
+	* getdelim.h: New file.
+	* Makefile.am (EXTRA_libutil_a_SOURCES): Added it.
+
+1999-07-29  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* asprintf.c: New file.
+	* asprintf.h: New file.
+	* Makefile.am (EXTRA_libutil_a_SOURCES): Added it.
+
+1999-07-26  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* Makefile.am: New file.
+	(EXTRA_libutil_a_SOURCES): Put getopt.h here so it gets
+	distributed.
+

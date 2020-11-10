@@ -1,0 +1,115 @@
+Changes in 1.0.4:
+
+* No user-visible changes.
+
+Changes in 1.0.3:
+
+* Plugged some leaks.
+* "q-client" will now exit with error code 2 when the server returned failure.
+  This may be used to differentiate this condition from various other kinds of
+  problems.
+
+Changes in 1.0.2:
+
+* No user-visible changes.
+
+Changes in 1.0.0:
+
+* Renamed package to "Quintuple Agent". "secret-agent" binary is now called
+  "q-agent", "secret-client" is called "q-client". (Other binaries keep their
+  old names.)
+* Much enhanced documentation!
+* "q-agent" will now honor your $TMPDIR setting when choosing a location for
+  its socket.
+
+Changes in 0.9:
+
+* INTERFACE CHANGE: "secret-agent" no longer forks per default. The "--nofork"
+  option is now useless, and has been deprecated. This means that you will
+  have to remove "--nofork" from those calls that used it, and add a "&" to
+  those that didn't. The purpose of this change is to ensure that
+  "secret-agent" exits properly when your session terminates. If you don't
+  like this and want the agent (and your secrets!) to hang around
+  indefinitely, you can use the new option "--fork" to get back the old
+  behaviour.
+* If you don't like the query window snatching keyboard focus from you, you
+  can now pass the "--no-global-grab" option to the query program by adding
+  "--query-options --no-global-grab" (or "-q -g" for short) to your calls to
+  "secret-agent" and "secret-client".
+* When asked for an unknown secret "secret-agent" would pop up a window (if
+  possible) . This window now also offers an opportunity to twiddle the
+  time-to-live and insurance options of the new secret.
+
+Changes in 0.8:
+
+* "secret-agent" can now be instructed to ask every time a particular secret
+  is requested whether to really hand it out. Add the "-i" option to
+  "secret-client put" to turn that on for a secret. This feature will only
+  work if "secret-agent" has access to X, and either the GTK+ library, or
+  "xmessage" is available.
+* "secret-agent" can automatically delete a secret at a given deadline,
+  alternatively to remembering it indefinitely. Check out the "-t" option of
+  "secret-client put".
+
+Changes in 0.7:
+
+* PGP 2.6 support! Just use the new "apgp" wrapper program.
+* insecure memory warnings will no longer mess up stdout, but will to to
+  stderr like they should.
+* "secret-agent", "secret-client", "agpg" now make use of the `cap_ipc_lock'
+  capability, if your installation supports it. See the "Security" chapter in
+  the README.
+* "secret-agent" will try to query for unknown secrets. That means, you won't
+  need to carefully store needed secrets before "agpg" etc can be used.
+* "secret-client"'s internal prompt, and "secret-query" will inform you which
+  secret they want to know.
+* "secret-query" grabs the keyboard for additional security (and to prevent
+  focus boo-boos).
+
+Changes in 0.6:
+
+* LIST command is implemented in "secret-agent" and "secret-client".
+* "secret-client", and "agpg" now also drop privileges if started suid-root.
+  Making the binaries suid-root is not recommended.
+* "make check" now kills off the agent it starts, and no other.
+
+Changes in 0.5:
+
+* "secret-agent" now has a "--csh" option, which makes it output
+  csh-compatible commands.
+* "secret-agent" tries to behave, even if installed suid-root. I do not
+  recommend this at all, though.
+* "secret-client" won't output secret to ttys anymore. Pipe into "cat", if you
+  really want that.
+* Fixed a critical bug in "agpg" that would mess up the commandline passed to
+  gpg.
+
+Changes in 0.4:
+
+* New program "secret-query" that is used by "secret-client" to query the
+  secret when no terminal is available.
+* New program "agpg", a C replacement for "cgpg" that allows gpg to use stdin
+  as always. So you can now pipe through gpg, or use it interactively (think:
+  keysigning).
+
+Changes in 0.3:
+
+* Name changed to "secret-agent".
+* client application made usable:
+** Read secrets from stdin, putting a passphrase onto the commandline was
+   really only for testing.
+** Output only the secret on a GET operation, not the other fluff.
+* New script "cgpg" that wraps around gpg and uses the client to fetch the
+  passphrase for gpg.
+* We now use secure mlock'd memory if the system allows it.
+* Portability fixes.
+
+Changes in 0.2
+
+* client library split out from prototype client.
+
+
+local variables:
+mode: indented-text
+fill-column: 78
+end:

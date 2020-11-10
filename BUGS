@@ -1,0 +1,21 @@
+Known Bugs And Misfeatures
+==========================
+
+* There are still some places where secrets can end up in insecure memory:
+  investigate!
+* If you have more than one secret key, selection of the right one is quite
+  fragile in "agpg". Adding "-u <keyid>" to the parameters should always work,
+  though.
+
+Bug Reporting
+=============
+
+Bug reports should go to <robbe@orcus.priv.at>. Make sure that you mention
+the version of Quintuple Agent that you use, and the platform you're running it
+on.
+
+
+local variables:
+mode: indented-text
+fill-column: 78
+end:

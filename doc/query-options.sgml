@@ -1,0 +1,6 @@
+The only viable option right now is <option/--no-global-grab/ (or
+<option/-g/ in short), which prevents grabbing of the keyboard until
+the query window is focused. (See
+<citerefentry><refentrytitle>secret-query</refentrytitle><manvolnum/1/
+</citerefentry> for details.)
+

@@ -1,0 +1,11 @@
+# List of source files containing translatable strings.
+# Copyright (C) 1999 Robert Bihlmeyer
+agent.c
+agentlib.c
+agpg.c
+apgp.c
+client.c
+lib/getopt.c
+secmem.c
+secret-query.c
+util.c

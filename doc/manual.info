@@ -1,0 +1,411 @@
+This is manual.info, produced by makeinfo version 4.3 from manual.texi.
+
+
+File: manual.info,  Node: Top,  Next: Introduction,  Up: (dir)
+
+
+
+* Menu:
+
+* Introduction::
+* Building Quintuple Agent::
+* Using Quintuple Agent::
+* Going Further::
+* Security::
+* Contact Information::
+
+
+File: manual.info,  Node: Introduction,  Next: Building Quintuple Agent,  Prev: Top,  Up: Top
+
+Introduction
+************
+
+   Quintuple Agent is a program that stores secrets for you.
+
+   An example usage of Quintuple Agent would be for the storage of a
+passphrase.  This way you will have to enter the passphrase only once
+in a while, not everytime it is needed.
+
+
+File: manual.info,  Node: Building Quintuple Agent,  Next: Using Quintuple Agent,  Prev: Introduction,  Up: Top
+
+Building Quintuple Agent
+************************
+
+   Quintuple Agent requires glib (a library of generic C functions).
+For more information on glib, see `http://www.gtk.org/'. Download
+locations are listed in `ftp://ftp.gtk.org/etc/mirrors'.
+
+   The GTK+ library (available from the same location as glib) is
+needed for some convenient functionality (including secret-on-demand).
+
+   To use internationalization (i18n), Quintuple Agent needs a usable
+gettext or catgets implementation. If your system does not provide one
+(e.g. HP-UX), either use the configure switch "-disable-nls", or get
+GNU gettext from your nearest GNU mirror (a list of mirrors is
+available under `ftp://ftp.gnu.org/gnu/GNUinfo/FTP').
+
+   General installation instructions are given in the file "INSTALL".
+In short: "./configure; make install" should work.
+
+   Quintuple Agent is developed on Intel GNU/Linux. All in all, it has
+been successfully tested on:
+
+   * Intel GNU/Linux Debian 2.2
+
+   * Sparc SunOS 5.8 (a.k.a. Solaris 2.8)
+
+   * Intel FreeBSD 4.3
+
+   * HPPA HP-UX 10.20 [1]
+
+   Previous versions compiled correctly on the following platforms, but
+their current status is unknown:
+
+   * Alpha Digital Unix 4.0
+
+   * Alpha GNU/Linux RedHat 5.2
+
+   * Intel GNU/Linux RedHat 4.2 (libc5)
+
+   * DEC Ultrix 4.3
+
+   [1] I needed to add -with-included-gettext to the configure call to
+compile cleanly.
+
+   It should run on almost any Unix-like platform with only minor
+modifications.  Please send me mail, if you get it to run on a system
+not mentioned above.
+
+
+File: manual.info,  Node: Using Quintuple Agent,  Next: Going Further,  Prev: Building Quintuple Agent,  Up: Top
+
+Using Quintuple Agent
+*********************
+
+   Before the agent will do anything for you, you'll have to start it
+like this:
+
+   $ eval `q-agent &`
+
+   (This is for a bourne-compatible shell, c-shell users will have to
+add a "-csh" option to the call.) What this does is start q-agent in the
+background. It will print commands to stdout that set $AGENT_SOCKET. The
+"eval" catches, and executes those.
+
+   From now on, you can talk to the agent by means of the q-client.
+Let's do something useful, like storing a secret:
+
+   $ q-client put 12345678 "Alice Manners"
+
+   The client will respond by asking you for the secret. (Enter
+something, but don't enter a real secret, yet.) This secret will be
+stored with the agent under the tag "12345678". The last argument is a
+comment, that can hold additional information about the secret. It is
+not used yet, and you can just leave it out. Secrets can be retrieved
+later with the `get' command, something like this:
+
+   $ q-client get 12345678
+
+   To protect the innocent, q-client will refuse to output the secret
+directly. If you didn't use a real secret, you can append "| cat" just
+for testing. This will fool "q-client" into printing your secret. DO
+NOT use this trick with real secrets!
+
+   Normally you'd pipe the output of this command into another
+application that wants to read a password/passphrase on stdin. This
+way, the secret is never shown to you (or, more importantly,
+shoulder-surfers).
+
+   You should be aware, though, that your secret is simply available
+with a single command. Keep this in mind, when you leave your terminal
+- you may prefer locking it with vlock, xlock, xscreensaver, or
+something similar. If others know the password to your account, or you
+don't trust root, you should also be very wary. On the other hand,
+normal Unix semantics will protect your secret from other (non-root)
+users on the same system.
+
+   If, at a later stage, you decide that Quintuple Agent should forget
+your secret (for example, because you leave your computer unattended
+for a while), just issue:
+
+   $ q-client delete 12345678
+
+   which will wipe out the secret from memory.
+
+   The main use for Quintuple Agent at the moment is the storage of
+GnuPG or PGP passphrases. Of course you must have one of these programs
+to use it that way, but I guess that is just the reason you downloaded
+Quintuple Agent.
+
+   Support for GnuPG and PGP comes in the guise of so-called
+"wrappers", small programs that you call instead of the real thing. The
+wrappers call the real programs underneath, intercepting or
+anticipating passphrase requests.  Passphrase are fetched from the
+agent rather then entered every time by you.  Other than that, the
+wrappers try to look exactly like the underlying program.
+
+   In that way, you can, for example, sign a lot of e-mails with gpg,
+and only input the passphrase once.
+
+   I will describe the usage with GnuPG first: Instead of calling
+"gpg", you will run the agent wrapper called "agpg". For example,
+clear-signing the file "foo" will work like this:
+
+   $ agpg -clearsign foo
+
+   You will see that gpg wants a passphrase, but "agpg" will take care
+of that.  Other interaction with "gpg" works like usual.
+
+   If you want to use PGP, the usage is similar. Calls to "pgp" are
+replaced by calls to the agentized "apgp". Again, clear-signing the
+file "foo" is easily done like this:
+
+   $ apgp -sat foo
+
+   The passpharse will be provided by "apgp", other questions will have
+to be answered as usual.
+
+   Note that only PGP 2.6.3 is supported at the moment. Other 2.6
+versions may work, but PGP 5.0 and higher will not.
+
+   To use these wrappers effectively, Quintuple Agent must of course
+know your passphrase. It can learn of your passphrase in two ways:
+
+   (a) On demand Provided that you have started "q-agent" with $DISPLAY
+set (i.e. from inside X), the agent will automatically query you for
+any unknown secrets.  That means that the first time you use a wrapper,
+a window will pop-up, asking you for a secret. You should enter the
+corresponding passphrase there. Further usages of the same key will
+re-use this passphrase, until you kill "q-agent", or delete the secret
+from its memory. Invoking a wrapper instructing it to use new key (e.g.
+you have a RSA and a DSA key) will of course ask for the new passphrase.
+
+   (b) Before use If you wish, you can also store your passphrase with
+Quintuple Agent before it is used. This is the only way, if you start
+"q-agent" from outside X.
+
+   The tag has to be your key id. If you don't know your id, for GnuPG,
+do:
+
+   $ gpg -list-secret-keys
+
+   Find the line that starts with "sec". The number following the slash
+is your key id. For example:
+
+   sec  1024D/D415FC97 1999-08-05 Robert Bihlmeyer (DSA Testkey)
+
+   Here the key id is "D415FC97". So I would store my passphrase like
+this:
+
+   $ q-client put D415FC97 "passphrase for my DSA testkey"
+
+   You should of course substitute your own key id, and a suitable
+comment, there.
+
+   For PGP, try listing all the keys matching your name, find the right
+one, and again look after the first slash (the column is titled
+"KeyID"). I would do:
+
+   $ pgp -kv "Robert Bihlmeyer"
+
+   one of the resulting lines reads:
+
+   pub   512/5F570039 1999/10/19 Robert Bihlmeyer (RSA Testkey)
+
+   which makes "5F570039" my key id. I will store it as above.
+
+
+File: manual.info,  Node: Going Further,  Next: Security,  Prev: Using Quintuple Agent,  Up: Top
+
+Going Further
+*************
+
+   There are a few knobs you can twiddle to suit "q-agent" more to your
+needs.
+
+   One important setting that can be made at the initial deposition of
+a secret is the time it will be remembered. The default is to remember
+it for an indefinite timespan: until the daemon dies, or you manually
+invoke the deletion. You are also free to select a maximum lifetime for
+the secret. After the passage of the given number of seconds, "q-agent"
+will remove all traces of the secret from its memory. The time-to-live
+can be set with the "-t" option to "q-client put". For example,
+
+   $ q-client -t 600 put 1234
+
+   will give the "1234" secret a maximum lifespan of 10 minutes. If the
+daemon still runs by then, and the secret has not been deleted
+manually, it will be deleted automatically.
+
+   It is also possible to mark certain secrets so that "q-agent" will
+only hand them out after asking for permission. This confirmation
+requests consists of a small pop-up window (so this will only work if
+"q-agent" was started from within a windowed environment), which states
+the ID and comment of the secret, and asks whether it is ok to give it
+out or not. Unless you answer the question affirmatively, the secret is
+not handed out. To turn this behaviour on, add "-i" to your "q-client
+put" request. For example,
+
+   $ q-client -i put 5678
+
+   will instruct "q-agent" to insure itself of your permission before
+ever giving out secret "5678". The "-i" and "-t" options may be freely
+mixed.
+
+   This does not buy you that much more security, but it prevents
+simplistic attacks, where someone breaks into your (or root's) account,
+and just calls "q-client get" to spy on your secrets. But even with
+insurance, there are ways for an attacker to get the secrets, *if* she
+is able to gain access to your or root's account at the time you have
+the secrets stored inside "q-agent".
+
+
+File: manual.info,  Node: Security,  Next: Contact Information,  Prev: Going Further,  Up: Top
+
+Security
+********
+
+   Since Quintuple Agent is meant to store sensitive information, it is
+prudent to ponder the security of that information. Is it safe from
+prying eyes?
+
+   First off, let's restate two assumptions:
+
+   * It's senseless to hide information from yourself. The 	main
+     point of Quintuple Agent is to provide ready access to your
+     secrets for processes running under your user id.
+
+   * Hiding information from priviledged users (root) makes 	no
+     sense. There are a lot of ways how root could get at your
+     secrets. If you don't trust your administrator, you should not 	use
+     your account.
+
+   A direct consequence is that your secrets are in danger from an
+attacker that has access to your or root's account at the moment
+q-agent holds the secret. So don't leave your terminal unguarded while
+q-agent is hoarding secrets. One second would be enough for some
+bystander to learn your secrets.
+
+   BUT: an attacker gaining access to your or root's account after a
+secret has been erased from q-agent's memory will not get any
+information about that secret.
+
+   To attain this goal, all included tools handling secrets take some
+pains to erase them as soon as they are no longer needed. Even for
+attackers with hi-tech equipment it is a considerable task to
+reconstruct overwritten information in RAM.
+
+   Disk storage is another thing: once a bit pattern is written to
+disk, it may stay there an indefinite amount of time (regardless of the
+"free" status of the block containing it). There are known techniques
+to get at information that was stored on disk, even if it was
+overwritten a few times. The tools never write secrets to disk, and of
+course you should also refrain from doing this.
+
+   A problem case is paging, the action with which the operation system
+frees up some RAM by writing pages that haven't been in use for some
+time to disk. In a typical scenario you'd start up q-agent, store a
+passphrase there for later use, and do different things in the
+meantime. Your clever OS sees that q-agent is idle, and doesn't
+actually use its memory. When it gets short of memory (or just for
+kicks), it will try to page out unused stuff, the area where your
+secret is stored being a seemingly ideal candidate. We want to prevent
+that.
+
+   First, if your operating system uses encrypted swap, you get in for
+free.  Everything written to disk will be useless to attackers that
+come by later.  You can page out sensitive data at will. Personally, I
+consider encrypted swap the easiers, but not the optimal solution. Most
+of the data eligable for paging is not that sensitive - e.g. the buffer
+contents of an editor will probably end up on disk anyway, encrypting
+them while they are unsaved is a waste of resources. Ideally, we would
+want only some of our data to not hit the disk in cleartext.
+
+   mlock() is a simple system call that achieves that: it prevents
+memory areas from being paged out. The problem is that some systems
+don't support it at all, while others only allow root to do this kind
+of thing. The tools which want that kind of secure (read: mlock()ed)
+memory will give you appropriate warnings in case it could not be
+provided. The first case can't be helped, but for the second case there
+are two possibilities:
+  1. Make the tools setuid-root. That will give them root privileges,
+     so that mlock() is not a problem. All tools in need of secure
+     memory try to carfully drop all privileges as soon as it is
+     allocated. But I can't guarantee that they work flawless, and a
+     bug here could ruin your whole system's security.  Therefore I
+     don't recommend this. If you still want to risk it, a viable
+     middle ground is to only make q-agent (which holds secrets for
+     longer durations) setuid-root, while leaving the other tools
+     (which have considerably shorter life-spans, so paging is much
+     less probable) as-is, without secure memory.
+
+  2. Give the tools the `cap_ipc_lock' capability. This is actually a
+     refinement of the first solution. Some systems support the notion
+     of capabilities (also known as "privileges"), which are a kind of
+     "split-up root". If you manage to grant a capability that allows
+     for use of mlock() to the programs, they will use it to allocate
+     secure memory. This is preferable to making them setuid-root,
+     because this capability has much less potential than the whole
+     bunch of root privileges. The only exploit, that I can think of,
+     offhand, is trying to mlock() as much memory as possible, to
+     create a denial of service situation.
+
+   The only OS where this is known to work is Linux. You'll need:
+
+   * a kernel that supports filesystem capabilities -
+     `http://linux.kernel.org/pub/linux/libs/security/linux-privs/kernel-2.2-fcap'
+     has patches (the 2.2.16 patches worked well for me). The README
+     there   should explain things in detail.
+
+   * libcap, to link to the binaries
+
+   * the setcap program, included with libcap (you may need 	to
+     get the newest version from CVS - libcap-1.10 is not new
+     enough)
+
+   * the Quintuple Agent binaries prepared with "setcap
+     cap_ipc_lock+p <binary>" (the installation procedure 	will
+     try to do that automatically, if it can find the setcap
+     binary)
+
+   * the binaries on a filesystem that supports extended
+     attributes - to my current knowledge this includes only ext2 - 	AND
+     mounted with the "cap" option or else the previous step
+     will not work
+
+   Older patches at the linux-privs site offered an fcap-module - they
+worked as follows: The kernel had to be patched, CONFIG_VFS_CAP_PLUGIN
+enabled, and fcap-module loaded. Unfortunately, fcap-module was just a
+stopgap solution and lost all settings on shutdown. So you'd have to
+repeat the "setcap" call above after every reboot. Because of that I
+suggest that you upgrade to the newer kernel patches described above if
+at all possible.
+
+   All patches and sources should be available at
+`http://linux.kernel.org/pub/linux/libs/security/linux-privs/'.
+
+
+File: manual.info,  Node: Contact Information,  Prev: Security,  Up: Top
+
+Contact Information
+*******************
+
+   Quintuple Agent's main distribution point is located at
+`http://www.vibe.at/tools/q-agent/'
+
+   Any mail concerning Quintuple Agent should be directed to
+<robbe+sa@orcus.priv.at>.
+
+
+
+Tag Table:
+Node: Top73
+Node: Introduction278
+Node: Building Quintuple Agent644
+Node: Using Quintuple Agent2296
+Node: Going Further7741
+Node: Security9733
+Node: Contact Information15880
+
+End Tag Table

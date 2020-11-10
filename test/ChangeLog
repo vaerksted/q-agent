@@ -1,0 +1,46 @@
+2001-07-03  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c (main): Update exit codes for the "not found" cases.
+
+2001-05-29  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c: <time.h> is the standard header to include for time().
+
+2001-02-22  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c: Only include our setenv.h on systems missing setenv.
+
+2000-09-11  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c (start_agent): --nofork is no longer needed.
+
+2000-05-31  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c: Include more stuff.
+
+2000-04-23  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c (main): Test forgetting.
+	Adapt to new "list" output format.
+	Can no longer reliably test "list" output of deadlined secrets in
+	the current framework. Leaving only the first "list" test.
+
+1999-08-23  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c (remove_files): New function, removes temporary files.
+	(main): Call it at exit.
+	LIST tests added.
+	(client): If output is to be checked, pipe that through a filter,
+	and then through diff instead of doing a clumsy reimplementation
+	of diff.
+
+1999-08-21  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c: Include replacement header for setenv.
+
+1999-08-09  Robert Bihlmeyer  <robbe@orcus.priv.at>
+
+	* client.c: New file.
+
+	* Makefile.am: New file.
+

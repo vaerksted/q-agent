@@ -1,0 +1,1726 @@
+--- quintuple-agent-1.0.4.orig/config.sub
++++ quintuple-agent-1.0.4/config.sub
+@@ -1,9 +1,9 @@
+ #! /bin/sh
+ # Configuration validation subroutine script.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+-#   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
++#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+ 
+-timestamp='2003-01-03'
++timestamp='2005-04-22'
+ 
+ # This file is (in principle) common to ALL GNU software.
+ # The presence of a machine in this file suggests that SOME GNU software
+@@ -70,7 +70,7 @@
+ version="\
+ GNU config.sub ($timestamp)
+ 
+-Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
++Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+ Free Software Foundation, Inc.
+ 
+ This is free software; see the source for copying conditions.  There is NO
+@@ -118,7 +118,8 @@
+ # Here we must recognize all the valid KERNEL-OS combinations.
+ maybe_os=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\2/'`
+ case $maybe_os in
+-  nto-qnx* | linux-gnu* | freebsd*-gnu* | netbsd*-gnu* | storm-chaos* | os2-emx* | rtmk-nova*)
++  nto-qnx* | linux-gnu* | linux-dietlibc | linux-uclibc* | uclinux-uclibc* | uclinux-gnu* | \
++  kfreebsd*-gnu* | knetbsd*-gnu* | netbsd*-gnu* | storm-chaos* | os2-emx* | rtmk-nova*)
+     os=-$maybe_os
+     basic_machine=`echo $1 | sed 's/^\(.*\)-\([^-]*-[^-]*\)$/\1/'`
+     ;;
+@@ -144,7 +145,7 @@
+ 	-convergent* | -ncr* | -news | -32* | -3600* | -3100* | -hitachi* |\
+ 	-c[123]* | -convex* | -sun | -crds | -omron* | -dg | -ultra | -tti* | \
+ 	-harris | -dolphin | -highlevel | -gould | -cbm | -ns | -masscomp | \
+-	-apple | -axis)
++	-apple | -axis | -knuth | -cray)
+ 		os=
+ 		basic_machine=$1
+ 		;;
+@@ -228,14 +229,16 @@
+ 	| a29k \
+ 	| alpha | alphaev[4-8] | alphaev56 | alphaev6[78] | alphapca5[67] \
+ 	| alpha64 | alpha64ev[4-8] | alpha64ev56 | alpha64ev6[78] | alpha64pca5[67] \
++	| am33_2.0 \
+ 	| arc | arm | arm[bl]e | arme[lb] | armv[2345] | armv[345][lb] | avr \
+-	| clipper \
++	| bfin \
++	| c4x | clipper \
+ 	| d10v | d30v | dlx | dsp16xx \
+ 	| fr30 | frv \
+ 	| h8300 | h8500 | hppa | hppa1.[01] | hppa2.0 | hppa2.0[nw] | hppa64 \
+ 	| i370 | i860 | i960 | ia64 \
+-	| ip2k \
+-	| m32r | m68000 | m68k | m88k | mcore \
++	| ip2k | iq2000 \
++	| m32r | m32rle | m68000 | m68k | m88k | maxq | mcore \
+ 	| mips | mipsbe | mipseb | mipsel | mipsle \
+ 	| mips16 \
+ 	| mips64 | mips64el \
+@@ -247,6 +250,7 @@
+ 	| mipsisa32 | mipsisa32el \
+ 	| mipsisa32r2 | mipsisa32r2el \
+ 	| mipsisa64 | mipsisa64el \
++	| mipsisa64r2 | mipsisa64r2el \
+ 	| mipsisa64sb1 | mipsisa64sb1el \
+ 	| mipsisa64sr71k | mipsisa64sr71kel \
+ 	| mipstx39 | mipstx39el \
+@@ -257,14 +261,15 @@
+ 	| pdp10 | pdp11 | pj | pjl \
+ 	| powerpc | powerpc64 | powerpc64le | powerpcle | ppcbe \
+ 	| pyramid \
+-	| sh | sh[1234] | sh3e | sh[34]eb | shbe | shle | sh[1234]le | sh3ele \
++	| sh | sh[1234] | sh[23]e | sh[34]eb | shbe | shle | sh[1234]le | sh3ele \
+ 	| sh64 | sh64le \
+-	| sparc | sparc64 | sparc86x | sparclet | sparclite | sparcv9 | sparcv9b \
++	| sparc | sparc64 | sparc64b | sparc86x | sparclet | sparclite \
++	| sparcv8 | sparcv9 | sparcv9b \
+ 	| strongarm \
+-	| tahoe | thumb | tic80 | tron \
++	| tahoe | thumb | tic4x | tic80 | tron \
+ 	| v850 | v850e \
+ 	| we32k \
+-	| x86 | xscale | xstormy16 | xtensa \
++	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
+ 	| z8k)
+ 		basic_machine=$basic_machine-unknown
+ 		;;
+@@ -295,19 +300,19 @@
+ 	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
+ 	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
+ 	| avr-* \
+-	| bs2000-* \
+-	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* \
+-	| clipper-* | cydra-* \
++	| bfin-* | bs2000-* \
++	| c[123]* | c30-* | [cjt]90-* | c4x-* | c54x-* | c55x-* | c6x-* \
++	| clipper-* | craynv-* | cydra-* \
+ 	| d10v-* | d30v-* | dlx-* \
+ 	| elxsi-* \
+ 	| f30[01]-* | f700-* | fr30-* | frv-* | fx80-* \
+ 	| h8300-* | h8500-* \
+ 	| hppa-* | hppa1.[01]-* | hppa2.0-* | hppa2.0[nw]-* | hppa64-* \
+ 	| i*86-* | i860-* | i960-* | ia64-* \
+-	| ip2k-* \
+-	| m32r-* \
++	| ip2k-* | iq2000-* \
++	| m32r-* | m32rle-* \
+ 	| m68000-* | m680[012346]0-* | m68360-* | m683?2-* | m68k-* \
+-	| m88110-* | m88k-* | mcore-* \
++	| m88110-* | m88k-* | maxq-* | mcore-* \
+ 	| mips-* | mipsbe-* | mipseb-* | mipsel-* | mipsle-* \
+ 	| mips16-* \
+ 	| mips64-* | mips64el-* \
+@@ -319,25 +324,30 @@
+ 	| mipsisa32-* | mipsisa32el-* \
+ 	| mipsisa32r2-* | mipsisa32r2el-* \
+ 	| mipsisa64-* | mipsisa64el-* \
++	| mipsisa64r2-* | mipsisa64r2el-* \
+ 	| mipsisa64sb1-* | mipsisa64sb1el-* \
+ 	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
+ 	| mipstx39-* | mipstx39el-* \
++	| mmix-* \
+ 	| msp430-* \
+-	| none-* | np1-* | nv1-* | ns16k-* | ns32k-* \
++	| none-* | np1-* | ns16k-* | ns32k-* \
+ 	| orion-* \
+ 	| pdp10-* | pdp11-* | pj-* | pjl-* | pn-* | power-* \
+ 	| powerpc-* | powerpc64-* | powerpc64le-* | powerpcle-* | ppcbe-* \
+ 	| pyramid-* \
+ 	| romp-* | rs6000-* \
+-	| sh-* | sh[1234]-* | sh3e-* | sh[34]eb-* | shbe-* \
++	| sh-* | sh[1234]-* | sh[23]e-* | sh[34]eb-* | shbe-* \
+ 	| shle-* | sh[1234]le-* | sh3ele-* | sh64-* | sh64le-* \
+-	| sparc-* | sparc64-* | sparc86x-* | sparclet-* | sparclite-* \
+-	| sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
+-	| tahoe-* | thumb-* | tic30-* | tic4x-* | tic54x-* | tic80-* | tron-* \
++	| sparc-* | sparc64-* | sparc64b-* | sparc86x-* | sparclet-* \
++	| sparclite-* \
++	| sparcv8-* | sparcv9-* | sparcv9b-* | strongarm-* | sv1-* | sx?-* \
++	| tahoe-* | thumb-* \
++	| tic30-* | tic4x-* | tic54x-* | tic55x-* | tic6x-* | tic80-* \
++	| tron-* \
+ 	| v850-* | v850e-* | vax-* \
+ 	| we32k-* \
+-	| x86-* | x86_64-* | xps100-* | xscale-* | xstormy16-* \
+-	| xtensa-* \
++	| x86-* | x86_64-* | xps100-* | xscale-* | xscalee[bl]-* \
++	| xstormy16-* | xtensa-* \
+ 	| ymp-* \
+ 	| z8k-*)
+ 		;;
+@@ -357,6 +367,9 @@
+ 		basic_machine=a29k-amd
+ 		os=-udi
+ 		;;
++    	abacus)
++		basic_machine=abacus-unknown
++		;;
+ 	adobe68k)
+ 		basic_machine=m68010-adobe
+ 		os=-scout
+@@ -371,6 +384,12 @@
+ 		basic_machine=a29k-none
+ 		os=-bsd
+ 		;;
++	amd64)
++		basic_machine=x86_64-pc
++		;;
++	amd64-*)
++		basic_machine=x86_64-`echo $basic_machine | sed 's/^[^-]*-//'`
++		;;
+ 	amdahl)
+ 		basic_machine=580-amdahl
+ 		os=-sysv
+@@ -430,12 +449,27 @@
+ 		basic_machine=j90-cray
+ 		os=-unicos
+ 		;;
++	craynv)
++		basic_machine=craynv-cray
++		os=-unicosmp
++		;;
++	cr16c)
++		basic_machine=cr16c-unknown
++		os=-elf
++		;;
+ 	crds | unos)
+ 		basic_machine=m68k-crds
+ 		;;
++	crisv32 | crisv32-* | etraxfs*)
++		basic_machine=crisv32-axis
++		;;
+ 	cris | cris-* | etrax*)
+ 		basic_machine=cris-axis
+ 		;;
++	crx)
++		basic_machine=crx-unknown
++		os=-elf
++		;;
+ 	da30 | da30-*)
+ 		basic_machine=m68k-da30
+ 		;;
+@@ -458,6 +492,10 @@
+ 		basic_machine=m88k-motorola
+ 		os=-sysv3
+ 		;;
++	djgpp)
++		basic_machine=i586-pc
++		os=-msdosdjgpp
++		;;
+ 	dpx20 | dpx20-*)
+ 		basic_machine=rs6000-bull
+ 		os=-bosx
+@@ -636,10 +674,6 @@
+ 	mips3*)
+ 		basic_machine=`echo $basic_machine | sed -e 's/mips3/mips64/'`-unknown
+ 		;;
+-	mmix*)
+-		basic_machine=mmix-knuth
+-		os=-mmixware
+-		;;
+ 	monitor)
+ 		basic_machine=m68k-rom68k
+ 		os=-coff
+@@ -720,10 +754,6 @@
+ 	np1)
+ 		basic_machine=np1-gould
+ 		;;
+-	nv1)
+-		basic_machine=nv1-cray
+-		os=-unicosmp
+-		;;
+ 	nsr-tandem)
+ 		basic_machine=nsr-tandem
+ 		;;
+@@ -735,6 +765,10 @@
+ 		basic_machine=or32-unknown
+ 		os=-coff
+ 		;;
++	os400)
++		basic_machine=powerpc-ibm
++		os=-os400
++		;;
+ 	OSE68000 | ose68000)
+ 		basic_machine=m68000-ericsson
+ 		os=-ose
+@@ -766,18 +800,24 @@
+ 	pentiumpro | p6 | 6x86 | athlon | athlon_*)
+ 		basic_machine=i686-pc
+ 		;;
+-	pentiumii | pentium2)
++	pentiumii | pentium2 | pentiumiii | pentium3)
+ 		basic_machine=i686-pc
+ 		;;
++	pentium4)
++		basic_machine=i786-pc
++		;;
+ 	pentium-* | p5-* | k5-* | k6-* | nexgen-* | viac3-*)
+ 		basic_machine=i586-`echo $basic_machine | sed 's/^[^-]*-//'`
+ 		;;
+ 	pentiumpro-* | p6-* | 6x86-* | athlon-*)
+ 		basic_machine=i686-`echo $basic_machine | sed 's/^[^-]*-//'`
+ 		;;
+-	pentiumii-* | pentium2-*)
++	pentiumii-* | pentium2-* | pentiumiii-* | pentium3-*)
+ 		basic_machine=i686-`echo $basic_machine | sed 's/^[^-]*-//'`
+ 		;;
++	pentium4-*)
++		basic_machine=i786-`echo $basic_machine | sed 's/^[^-]*-//'`
++		;;
+ 	pn)
+ 		basic_machine=pn-gould
+ 		;;
+@@ -836,6 +876,10 @@
+ 	sb1el)
+ 		basic_machine=mipsisa64sb1el-unknown
+ 		;;
++	sei)
++		basic_machine=mips-sei
++		os=-seiux
++		;;
+ 	sequent)
+ 		basic_machine=i386-sequent
+ 		;;
+@@ -843,6 +887,9 @@
+ 		basic_machine=sh-hitachi
+ 		os=-hms
+ 		;;
++	sh64)
++		basic_machine=sh64-unknown
++		;;
+ 	sparclite-wrs | simso-wrs)
+ 		basic_machine=sparclite-wrs
+ 		os=-vxworks
+@@ -917,14 +964,18 @@
+ 		basic_machine=t90-cray
+ 		os=-unicos
+ 		;;
+-        tic4x | c4x*)
+-		basic_machine=tic4x-unknown
+-		os=-coff
+-		;;
+ 	tic54x | c54x*)
+ 		basic_machine=tic54x-unknown
+ 		os=-coff
+ 		;;
++	tic55x | c55x*)
++		basic_machine=tic55x-unknown
++		os=-coff
++		;;
++	tic6x | c6x*)
++		basic_machine=tic6x-unknown
++		os=-coff
++		;;
+ 	tx39)
+ 		basic_machine=mipstx39-unknown
+ 		;;
+@@ -938,6 +989,10 @@
+ 	tower | tower-32)
+ 		basic_machine=m68k-ncr
+ 		;;
++	tpf)
++		basic_machine=s390x-ibm
++		os=-tpf
++		;;
+ 	udi29k)
+ 		basic_machine=a29k-amd
+ 		os=-udi
+@@ -981,6 +1036,10 @@
+ 		basic_machine=hppa1.1-winbond
+ 		os=-proelf
+ 		;;
++	xbox)
++		basic_machine=i686-pc
++		os=-mingw32
++		;;
+ 	xps | xps100)
+ 		basic_machine=xps100-honeywell
+ 		;;
+@@ -1011,6 +1070,9 @@
+ 	romp)
+ 		basic_machine=romp-ibm
+ 		;;
++	mmix)
++		basic_machine=mmix-knuth
++		;;
+ 	rs6000)
+ 		basic_machine=rs6000-ibm
+ 		;;
+@@ -1027,13 +1089,13 @@
+ 	we32k)
+ 		basic_machine=we32k-att
+ 		;;
+-	sh3 | sh4 | sh3eb | sh4eb | sh[1234]le | sh3ele)
++	sh3 | sh4 | sh[34]eb | sh[1234]le | sh[23]ele)
+ 		basic_machine=sh-unknown
+ 		;;
+ 	sh64)
+ 		basic_machine=sh64-unknown
+ 		;;
+-	sparc | sparcv9 | sparcv9b)
++	sparc | sparcv8 | sparcv9 | sparcv9b)
+ 		basic_machine=sparc-sun
+ 		;;
+ 	cydra)
+@@ -1106,19 +1168,20 @@
+ 	      | -aos* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+-	      | -hiux* | -386bsd* | -netbsd* | -openbsd* | -freebsd* | -riscix* \
+-	      | -lynxos* | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
++	      | -hiux* | -386bsd* | -knetbsd* | -mirbsd* | -netbsd* | -openbsd* \
++	      | -ekkobsd* | -kfreebsd* | -freebsd* | -riscix* | -lynxos* \
++	      | -bosx* | -nextstep* | -cxux* | -aout* | -elf* | -oabi* \
+ 	      | -ptx* | -coff* | -ecoff* | -winnt* | -domain* | -vsta* \
+ 	      | -udi* | -eabi* | -lites* | -ieee* | -go32* | -aux* \
+ 	      | -chorusos* | -chorusrdb* \
+ 	      | -cygwin* | -pe* | -psos* | -moss* | -proelf* | -rtems* \
+-	      | -mingw32* | -linux-gnu* | -uxpv* | -beos* | -mpeix* | -udk* \
++	      | -mingw32* | -linux-gnu* | -linux-uclibc* | -uxpv* | -beos* | -mpeix* | -udk* \
+ 	      | -interix* | -uwin* | -mks* | -rhapsody* | -darwin* | -opened* \
+ 	      | -openstep* | -oskit* | -conix* | -pw32* | -nonstopux* \
+ 	      | -storm-chaos* | -tops10* | -tenex* | -tops20* | -its* \
+ 	      | -os2* | -vos* | -palmos* | -uclinux* | -nucleus* \
+ 	      | -morphos* | -superux* | -rtmk* | -rtmk-nova* | -windiss* \
+-	      | -powermax* | -dnix* | -microbsd*)
++	      | -powermax* | -dnix* | -nx6 | -nx7 | -sei* | -dragonfly*)
+ 	# Remember, each alternative MUST END IN *, to match a version number.
+ 		;;
+ 	-qnx*)
+@@ -1142,6 +1205,9 @@
+ 	-mac*)
+ 		os=`echo $os | sed -e 's|mac|macos|'`
+ 		;;
++	-linux-dietlibc)
++		os=-linux-dietlibc
++		;;
+ 	-linux*)
+ 		os=`echo $os | sed -e 's|linux|linux-gnu|'`
+ 		;;
+@@ -1154,6 +1220,9 @@
+ 	-opened*)
+ 		os=-openedition
+ 		;;
++        -os400*)
++		os=-os400
++		;;
+ 	-wince*)
+ 		os=-wince
+ 		;;
+@@ -1175,6 +1244,9 @@
+ 	-atheos*)
+ 		os=-atheos
+ 		;;
++	-syllable*)
++		os=-syllable
++		;;
+ 	-386bsd)
+ 		os=-bsd
+ 		;;
+@@ -1197,6 +1269,9 @@
+ 	-sinix*)
+ 		os=-sysv4
+ 		;;
++        -tpf*)
++		os=-tpf
++		;;
+ 	-triton*)
+ 		os=-sysv3
+ 		;;
+@@ -1227,6 +1302,15 @@
+ 	-*mint | -mint[0-9]* | -*MiNT | -MiNT[0-9]*)
+ 		os=-mint
+ 		;;
++	-aros*)
++		os=-aros
++		;;
++	-kaos*)
++		os=-kaos
++		;;
++	-zvmoe)
++		os=-zvmoe
++		;;
+ 	-none)
+ 		;;
+ 	*)
+@@ -1258,6 +1342,9 @@
+ 	arm*-semi)
+ 		os=-aout
+ 		;;
++    c4x-* | tic4x-*)
++        os=-coff
++        ;;
+ 	# This must come before the *-dec entry.
+ 	pdp10-*)
+ 		os=-tops20
+@@ -1304,6 +1391,9 @@
+ 	*-ibm)
+ 		os=-aix
+ 		;;
++    	*-knuth)
++		os=-mmixware
++		;;
+ 	*-wec)
+ 		os=-proelf
+ 		;;
+@@ -1436,9 +1526,15 @@
+ 			-mvs* | -opened*)
+ 				vendor=ibm
+ 				;;
++			-os400*)
++				vendor=ibm
++				;;
+ 			-ptx*)
+ 				vendor=sequent
+ 				;;
++			-tpf*)
++				vendor=ibm
++				;;
+ 			-vxsim* | -vxworks* | -windiss*)
+ 				vendor=wrs
+ 				;;
+--- quintuple-agent-1.0.4.orig/config.guess
++++ quintuple-agent-1.0.4/config.guess
+@@ -1,9 +1,9 @@
+ #! /bin/sh
+ # Attempt to guess a canonical system name.
+ #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+-#   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
++#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+ 
+-timestamp='2003-01-10'
++timestamp='2005-04-22'
+ 
+ # This file is free software; you can redistribute it and/or modify it
+ # under the terms of the GNU General Public License as published by
+@@ -53,7 +53,7 @@
+ GNU config.guess ($timestamp)
+ 
+ Originally written by Per Bothner.
+-Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
++Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+ Free Software Foundation, Inc.
+ 
+ This is free software; see the source for copying conditions.  There is NO
+@@ -106,6 +106,7 @@
+ : ${TMPDIR=/tmp} ;
+  { tmp=`(umask 077 && mktemp -d -q "$TMPDIR/cgXXXXXX") 2>/dev/null` && test -n "$tmp" && test -d "$tmp" ; } ||
+  { test -n "$RANDOM" && tmp=$TMPDIR/cg$$-$RANDOM && (umask 077 && mkdir $tmp) ; } ||
++ { tmp=$TMPDIR/cg-$$ && (umask 077 && mkdir $tmp) && echo "Warning: creating insecure temp directory" >&2 ; } ||
+  { echo "$me: cannot create a temporary directory in $TMPDIR" >&2 ; exit 1 ; } ;
+ dummy=$tmp/dummy ;
+ tmpfiles="$dummy.c $dummy.o $dummy.rel $dummy" ;
+@@ -196,15 +197,21 @@
+ 	# CPU_TYPE-MANUFACTURER-OPERATING_SYSTEM is used.
+ 	echo "${machine}-${os}${release}"
+ 	exit 0 ;;
++    amd64:OpenBSD:*:*)
++	echo x86_64-unknown-openbsd${UNAME_RELEASE}
++	exit 0 ;;
+     amiga:OpenBSD:*:*)
+ 	echo m68k-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+-    arc:OpenBSD:*:*)
+-	echo mipsel-unknown-openbsd${UNAME_RELEASE}
++    cats:OpenBSD:*:*)
++	echo arm-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+     hp300:OpenBSD:*:*)
+ 	echo m68k-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
++    luna88k:OpenBSD:*:*)
++    	echo m88k-unknown-openbsd${UNAME_RELEASE}
++	exit 0 ;;
+     mac68k:OpenBSD:*:*)
+ 	echo m68k-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+@@ -220,88 +227,76 @@
+     mvmeppc:OpenBSD:*:*)
+ 	echo powerpc-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+-    pmax:OpenBSD:*:*)
+-	echo mipsel-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+     sgi:OpenBSD:*:*)
+-	echo mipseb-unknown-openbsd${UNAME_RELEASE}
++	echo mips64-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+     sun3:OpenBSD:*:*)
+ 	echo m68k-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+-    wgrisc:OpenBSD:*:*)
+-	echo mipsel-unknown-openbsd${UNAME_RELEASE}
+-	exit 0 ;;
+     *:OpenBSD:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-openbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+-    *:MicroBSD:*:*)
+-	echo ${UNAME_MACHINE}-unknown-microbsd${UNAME_RELEASE}
++    *:ekkoBSD:*:*)
++	echo ${UNAME_MACHINE}-unknown-ekkobsd${UNAME_RELEASE}
++	exit 0 ;;
++    macppc:MirBSD:*:*)
++	echo powerppc-unknown-mirbsd${UNAME_RELEASE}
++	exit 0 ;;
++    *:MirBSD:*:*)
++	echo ${UNAME_MACHINE}-unknown-mirbsd${UNAME_RELEASE}
+ 	exit 0 ;;
+     alpha:OSF1:*:*)
+-	if test $UNAME_RELEASE = "V4.0"; then
++	case $UNAME_RELEASE in
++	*4.0)
+ 		UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $3}'`
+-	fi
++		;;
++	*5.*)
++	        UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $4}'`
++		;;
++	esac
++	# According to Compaq, /usr/sbin/psrinfo has been available on
++	# OSF/1 and Tru64 systems produced since 1995.  I hope that
++	# covers most systems running today.  This code pipes the CPU
++	# types through head -n 1, so we only detect the type of CPU 0.
++	ALPHA_CPU_TYPE=`/usr/sbin/psrinfo -v | sed -n -e 's/^  The alpha \(.*\) processor.*$/\1/p' | head -n 1`
++	case "$ALPHA_CPU_TYPE" in
++	    "EV4 (21064)")
++		UNAME_MACHINE="alpha" ;;
++	    "EV4.5 (21064)")
++		UNAME_MACHINE="alpha" ;;
++	    "LCA4 (21066/21068)")
++		UNAME_MACHINE="alpha" ;;
++	    "EV5 (21164)")
++		UNAME_MACHINE="alphaev5" ;;
++	    "EV5.6 (21164A)")
++		UNAME_MACHINE="alphaev56" ;;
++	    "EV5.6 (21164PC)")
++		UNAME_MACHINE="alphapca56" ;;
++	    "EV5.7 (21164PC)")
++		UNAME_MACHINE="alphapca57" ;;
++	    "EV6 (21264)")
++		UNAME_MACHINE="alphaev6" ;;
++	    "EV6.7 (21264A)")
++		UNAME_MACHINE="alphaev67" ;;
++	    "EV6.8CB (21264C)")
++		UNAME_MACHINE="alphaev68" ;;
++	    "EV6.8AL (21264B)")
++		UNAME_MACHINE="alphaev68" ;;
++	    "EV6.8CX (21264D)")
++		UNAME_MACHINE="alphaev68" ;;
++	    "EV6.9A (21264/EV69A)")
++		UNAME_MACHINE="alphaev69" ;;
++	    "EV7 (21364)")
++		UNAME_MACHINE="alphaev7" ;;
++	    "EV7.9 (21364A)")
++		UNAME_MACHINE="alphaev79" ;;
++	esac
++	# A Pn.n version is a patched version.
+ 	# A Vn.n version is a released version.
+ 	# A Tn.n version is a released field test version.
+ 	# A Xn.n version is an unreleased experimental baselevel.
+ 	# 1.2 uses "1.2" for uname -r.
+-	eval $set_cc_for_build
+-	cat <<EOF >$dummy.s
+-	.data
+-\$Lformat:
+-	.byte 37,100,45,37,120,10,0	# "%d-%x\n"
+-
+-	.text
+-	.globl main
+-	.align 4
+-	.ent main
+-main:
+-	.frame \$30,16,\$26,0
+-	ldgp \$29,0(\$27)
+-	.prologue 1
+-	.long 0x47e03d80 # implver \$0
+-	lda \$2,-1
+-	.long 0x47e20c21 # amask \$2,\$1
+-	lda \$16,\$Lformat
+-	mov \$0,\$17
+-	not \$1,\$18
+-	jsr \$26,printf
+-	ldgp \$29,0(\$26)
+-	mov 0,\$16
+-	jsr \$26,exit
+-	.end main
+-EOF
+-	$CC_FOR_BUILD -o $dummy $dummy.s 2>/dev/null
+-	if test "$?" = 0 ; then
+-		case `$dummy` in
+-			0-0)
+-				UNAME_MACHINE="alpha"
+-				;;
+-			1-0)
+-				UNAME_MACHINE="alphaev5"
+-				;;
+-			1-1)
+-				UNAME_MACHINE="alphaev56"
+-				;;
+-			1-101)
+-				UNAME_MACHINE="alphapca56"
+-				;;
+-			2-303)
+-				UNAME_MACHINE="alphaev6"
+-				;;
+-			2-307)
+-				UNAME_MACHINE="alphaev67"
+-				;;
+-			2-1307)
+-				UNAME_MACHINE="alphaev68"
+-				;;
+-			3-1307)
+-				UNAME_MACHINE="alphaev7"
+-				;;
+-		esac
+-	fi
+-	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[VTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
++	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[PVTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+ 	exit 0 ;;
+     Alpha\ *:Windows_NT*:*)
+ 	# How do we know it's Interix rather than the generic POSIX subsystem?
+@@ -324,6 +319,12 @@
+     *:OS/390:*:*)
+ 	echo i370-ibm-openedition
+ 	exit 0 ;;
++    *:z/VM:*:*)
++	echo s390-ibm-zvmoe
++	exit 0 ;;
++    *:OS400:*:*)
++        echo powerpc-ibm-os400
++	exit 0 ;;
+     arm:RISC*:1.[012]*:*|arm:riscix:1.[012]*:*)
+ 	echo arm-acorn-riscix${UNAME_RELEASE}
+ 	exit 0;;
+@@ -341,7 +342,10 @@
+     NILE*:*:*:dcosx)
+ 	echo pyramid-pyramid-svr4
+ 	exit 0 ;;
+-    DRS?6000:UNIX_SV:4.2*:7*)
++    DRS?6000:unix:4.0:6*)
++	echo sparc-icl-nx6
++	exit 0 ;;
++    DRS?6000:UNIX_SV:4.2*:7* | DRS?6000:isis:4.2*:7*)
+ 	case `/usr/bin/uname -p` in
+ 	    sparc) echo sparc-icl-nx7 && exit 0 ;;
+ 	esac ;;
+@@ -413,6 +417,9 @@
+     *:*MiNT:*:* | *:*mint:*:* | *:*TOS:*:*)
+         echo m68k-unknown-mint${UNAME_RELEASE}
+         exit 0 ;;
++    m68k:machten:*:*)
++	echo m68k-apple-machten${UNAME_RELEASE}
++	exit 0 ;;
+     powerpc:machten:*:*)
+ 	echo powerpc-apple-machten${UNAME_RELEASE}
+ 	exit 0 ;;
+@@ -748,7 +755,7 @@
+ 	echo sv1-cray-unicos${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+ 	exit 0 ;;
+     *:UNICOS/mp:*:*)
+-	echo nv1-cray-unicosmp${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/' 
++	echo craynv-cray-unicosmp${UNAME_RELEASE} | sed -e 's/\.[^.]*$/.X/'
+ 	exit 0 ;;
+     F30[01]:UNIX_System_V:*:* | F700:UNIX_System_V:*:*)
+ 	FUJITSU_PROC=`uname -m | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+@@ -756,6 +763,11 @@
+         FUJITSU_REL=`echo ${UNAME_RELEASE} | sed -e 's/ /_/'`
+         echo "${FUJITSU_PROC}-fujitsu-${FUJITSU_SYS}${FUJITSU_REL}"
+         exit 0 ;;
++    5000:UNIX_System_V:4.*:*)
++        FUJITSU_SYS=`uname -p | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' | sed -e 's/\///'`
++        FUJITSU_REL=`echo ${UNAME_RELEASE} | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz' | sed -e 's/ /_/'`
++        echo "sparc-fujitsu-${FUJITSU_SYS}${FUJITSU_REL}"
++	exit 0 ;;
+     i*86:BSD/386:*:* | i*86:BSD/OS:*:* | *:Ascend\ Embedded/OS:*:*)
+ 	echo ${UNAME_MACHINE}-pc-bsdi${UNAME_RELEASE}
+ 	exit 0 ;;
+@@ -766,18 +778,7 @@
+ 	echo ${UNAME_MACHINE}-unknown-bsdi${UNAME_RELEASE}
+ 	exit 0 ;;
+     *:FreeBSD:*:*)
+-	# Determine whether the default compiler uses glibc.
+-	eval $set_cc_for_build
+-	sed 's/^	//' << EOF >$dummy.c
+-	#include <features.h>
+-	#if __GLIBC__ >= 2
+-	LIBC=gnu
+-	#else
+-	LIBC=
+-	#endif
+-EOF
+-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^LIBC=`
+-	echo ${UNAME_MACHINE}-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`${LIBC:+-$LIBC}
++	echo ${UNAME_MACHINE}-unknown-freebsd`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
+ 	exit 0 ;;
+     i*:CYGWIN*:*)
+ 	echo ${UNAME_MACHINE}-pc-cygwin
+@@ -788,8 +789,8 @@
+     i*:PW*:*)
+ 	echo ${UNAME_MACHINE}-pc-pw32
+ 	exit 0 ;;
+-    x86:Interix*:3*)
+-	echo i586-pc-interix3
++    x86:Interix*:[34]*)
++	echo i586-pc-interix${UNAME_RELEASE}|sed -e 's/\..*//'
+ 	exit 0 ;;
+     [345]86:Windows_95:* | [345]86:Windows_98:* | [345]86:Windows_NT:*)
+ 	echo i${UNAME_MACHINE}-pc-mks
+@@ -803,6 +804,9 @@
+     i*:UWIN*:*)
+ 	echo ${UNAME_MACHINE}-pc-uwin
+ 	exit 0 ;;
++    amd64:CYGWIN*:*:*)
++	echo x86_64-unknown-cygwin
++	exit 0 ;;
+     p*:CYGWIN*:*)
+ 	echo powerpcle-unknown-cygwin
+ 	exit 0 ;;
+@@ -810,17 +814,34 @@
+ 	echo powerpcle-unknown-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
+ 	exit 0 ;;
+     *:GNU:*:*)
++	# the GNU system
+ 	echo `echo ${UNAME_MACHINE}|sed -e 's,[-/].*$,,'`-unknown-gnu`echo ${UNAME_RELEASE}|sed -e 's,/.*$,,'`
+ 	exit 0 ;;
++    *:GNU/*:*:*)
++	# other systems with GNU libc and userland
++	echo ${UNAME_MACHINE}-unknown-`echo ${UNAME_SYSTEM} | sed 's,^[^/]*/,,' | tr '[A-Z]' '[a-z]'``echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`-gnu
++	exit 0 ;;
+     i*86:Minix:*:*)
+ 	echo ${UNAME_MACHINE}-pc-minix
+ 	exit 0 ;;
+     arm*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+ 	exit 0 ;;
++    cris:Linux:*:*)
++	echo cris-axis-linux-gnu
++	exit 0 ;;
++    crisv32:Linux:*:*)
++	echo crisv32-axis-linux-gnu
++	exit 0 ;;
++    frv:Linux:*:*)
++    	echo frv-unknown-linux-gnu
++	exit 0 ;;
+     ia64:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+ 	exit 0 ;;
++    m32r*:Linux:*:*)
++	echo ${UNAME_MACHINE}-unknown-linux-gnu
++	exit 0 ;;
+     m68*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+ 	exit 0 ;;
+@@ -896,6 +917,9 @@
+     s390:Linux:*:* | s390x:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-ibm-linux
+ 	exit 0 ;;
++    sh64*:Linux:*:*)
++    	echo ${UNAME_MACHINE}-unknown-linux-gnu
++	exit 0 ;;
+     sh*:Linux:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-linux-gnu
+ 	exit 0 ;;
+@@ -953,6 +977,9 @@
+ 	LIBC=gnuaout
+ 	#endif
+ 	#endif
++	#ifdef __dietlibc__
++	LIBC=dietlibc
++	#endif
+ EOF
+ 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^LIBC=`
+ 	test x"${LIBC}" != x && echo "${UNAME_MACHINE}-pc-linux-${LIBC}" && exit 0
+@@ -983,6 +1010,9 @@
+     i*86:atheos:*:*)
+ 	echo ${UNAME_MACHINE}-unknown-atheos
+ 	exit 0 ;;
++	i*86:syllable:*:*)
++	echo ${UNAME_MACHINE}-pc-syllable
++	exit 0 ;;
+     i*86:LynxOS:2.*:* | i*86:LynxOS:3.[01]*:* | i*86:LynxOS:4.0*:*)
+ 	echo i386-unknown-lynxos${UNAME_RELEASE}
+ 	exit 0 ;;
+@@ -1052,9 +1082,9 @@
+     M680?0:D-NIX:5.3:*)
+ 	echo m68k-diab-dnix
+ 	exit 0 ;;
+-    M68*:*:R3V[567]*:*)
++    M68*:*:R3V[5678]*:*)
+ 	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
+-    3[34]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 3[34]??/*:*:4.0:3.0 | 4400:*:4.0:3.0 | 4850:*:4.0:3.0 | SKA40:*:4.0:3.0 | SDS2:*:4.0:3.0)
++    3[345]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 3[34]??/*:*:4.0:3.0 | 4400:*:4.0:3.0 | 4850:*:4.0:3.0 | SKA40:*:4.0:3.0 | SDS2:*:4.0:3.0 | SHG2:*:4.0:3.0 | S7501*:*:4.0:3.0)
+ 	OS_REL=''
+ 	test -r /etc/.relid \
+ 	&& OS_REL=.`sed -n 's/[^ ]* [^ ]* \([0-9][0-9]\).*/\1/p' < /etc/.relid`
+@@ -1110,6 +1140,10 @@
+ 	# From seanf@swdc.stratus.com.
+ 	echo i860-stratus-sysv4
+ 	exit 0 ;;
++    i*86:VOS:*:*)
++	# From Paul.Green@stratus.com.
++	echo ${UNAME_MACHINE}-stratus-vos
++	exit 0 ;;
+     *:VOS:*:*)
+ 	# From Paul.Green@stratus.com.
+ 	echo hppa1.1-stratus-vos
+@@ -1152,9 +1186,10 @@
+ 	echo ${UNAME_MACHINE}-apple-rhapsody${UNAME_RELEASE}
+ 	exit 0 ;;
+     *:Darwin:*:*)
+-	case `uname -p` in
++	UNAME_PROCESSOR=`uname -p` || UNAME_PROCESSOR=unknown
++	case $UNAME_PROCESSOR in
+ 	    *86) UNAME_PROCESSOR=i686 ;;
+-	    powerpc) UNAME_PROCESSOR=powerpc ;;
++	    unknown) UNAME_PROCESSOR=powerpc ;;
+ 	esac
+ 	echo ${UNAME_PROCESSOR}-apple-darwin${UNAME_RELEASE}
+ 	exit 0 ;;
+@@ -1169,7 +1204,10 @@
+     *:QNX:*:4*)
+ 	echo i386-pc-qnx
+ 	exit 0 ;;
+-    NSR-[DGKLNPTVW]:NONSTOP_KERNEL:*:*)
++    NSE-?:NONSTOP_KERNEL:*:*)
++	echo nse-tandem-nsk${UNAME_RELEASE}
++	exit 0 ;;
++    NSR-?:NONSTOP_KERNEL:*:*)
+ 	echo nsr-tandem-nsk${UNAME_RELEASE}
+ 	exit 0 ;;
+     *:NonStop-UX:*:*)
+@@ -1210,6 +1248,22 @@
+     *:ITS:*:*)
+ 	echo pdp10-unknown-its
+ 	exit 0 ;;
++    SEI:*:*:SEIUX)
++        echo mips-sei-seiux${UNAME_RELEASE}
++	exit 0 ;;
++    *:DragonFly:*:*)
++	echo ${UNAME_MACHINE}-unknown-dragonfly`echo ${UNAME_RELEASE}|sed -e 's/[-(].*//'`
++	exit 0 ;;
++    *:*VMS:*:*)
++    	UNAME_MACHINE=`(uname -p) 2>/dev/null`
++	case "${UNAME_MACHINE}" in
++	    A*) echo alpha-dec-vms && exit 0 ;;
++	    I*) echo ia64-dec-vms && exit 0 ;;
++	    V*) echo vax-dec-vms && exit 0 ;;
++	esac ;;
++    *:XENIX:*:SysV)
++	echo i386-pc-xenix
++	exit 0 ;;
+ esac
+ 
+ #echo '(No uname command or uname output not recognized.)' 1>&2
+@@ -1369,7 +1423,9 @@
+ the operating system you are using. It is advised that you
+ download the most up to date version of the config scripts from
+ 
+-    ftp://ftp.gnu.org/pub/gnu/config/
++  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.guess
++and
++  http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/config/config/config.sub
+ 
+ If the version you run ($0) is already up to date, please
+ send the following data and any information you think might be
+--- quintuple-agent-1.0.4.orig/debian/patches/00list
++++ quintuple-agent-1.0.4/debian/patches/00list
+@@ -0,0 +1,2 @@
++201_new-gpg-fix.diff
++202_memory-corruption-fix.diff
+--- quintuple-agent-1.0.4.orig/debian/patches/201_new-gpg-fix.diff
++++ quintuple-agent-1.0.4/debian/patches/201_new-gpg-fix.diff
+@@ -0,0 +1,37 @@
++#! /bin/sh -e
++if [ $# -ne 1 ]; then 
++    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
++    exit 1  
++fi
++case "$1" in 
++    -patch) patch -f --no-backup-if-mismatch -p1 < $0;;
++    -unpatch) patch -f --no-backup-if-mismatch -R -p1 < $0;;
++    *)
++        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
++        exit 1;;
++esac
++
++exit 0
++
++@DPATCH@
++--- quintuple-agent-1.0.4.orig/agpg.c	2002-09-28 07:16:01.000000000 +0000
+++++ quintuple-agent-1.0.4/agpg.c	2005-02-21 21:49:21.466050839 +0000
++@@ -100,11 +100,13 @@
++   if (id)
++     free(buf);
++   while ((len = getline(&line, &size, gpg)) > 0) {
++-    if (len > 10 && !strncmp(line, "sec ", 4) && line[10] == '/') {
++-      char *x;
++-      if ((x = strchr(line + 11, ' ')) != NULL) {
++-	*x = 0;
++-	id = strdup(line + 11);
+++#define GPG_SECKEYS_DELIM " \t/"
+++    if (strncmp(line, "sec ", 4) == 0 &&
+++      strtok(line, GPG_SECKEYS_DELIM) &&
+++      strtok(NULL, GPG_SECKEYS_DELIM)) {
+++    char *x;
+++  if ((x = strtok(NULL, GPG_SECKEYS_DELIM)) != NULL) {
+++    id = strdup(x);
++ 	free(line);
++ 	pclose(gpg);
++ 	return id;
+--- quintuple-agent-1.0.4.orig/debian/patches/202_memory-corruption-fix.diff
++++ quintuple-agent-1.0.4/debian/patches/202_memory-corruption-fix.diff
+@@ -0,0 +1,28 @@
++#! /bin/sh -e
++if [ $# -ne 1 ]; then 
++    echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
++    exit 1  
++fi
++case "$1" in 
++    -patch) patch -f --no-backup-if-mismatch -p1 < $0;;
++    -unpatch) patch -f --no-backup-if-mismatch -R -p1 < $0;;
++    *)
++        echo >&2 "`basename $0`: script expects -patch|-unpatch as argument"
++        exit 1;;
++esac
++
++exit 0
++
++@DPATCH@
++diff -ur quintuple-agent-1.0.4-5/agpg.c quintuple-agent-1.0.4/agpg.c
++--- quintuple-agent-1.0.4-5/agpg.c	2002-09-28 01:16:01.000000000 -0600
+++++ quintuple-agent-1.0.4/agpg.c	2005-05-09 19:04:56.000000000 -0600
++@@ -175,7 +175,7 @@
++     int i;
++ 
++     close(p[1]);
++-    args = malloc(sizeof(char *) * (argc + 2));
+++    args = malloc(sizeof(char *) * (argc + 3));
++     if (!args) {
++       fprintf(stderr, _("out of memory\n"));
++       return EXIT_FAILURE;
+--- quintuple-agent-1.0.4.orig/debian/control.in
++++ quintuple-agent-1.0.4/debian/control.in
+@@ -0,0 +1,19 @@
++Source: quintuple-agent
++Section: utils
++Priority: extra
++Maintainer: Norbert Tretkowski <nobse@debian.org>
++Standards-Version: 3.6.1.1
++Build-Depends: debhelper (>= 2.0.0), libglib1.2-dev, libgtk1.2-dev, libcap2-dev [@linux-gnu@], type-handling (>= 0.2.1), autotools-dev, dpatch
++
++Package: quintuple-agent
++Architecture: any
++Depends: ${shlibs:Depends}
++Conflicts: secret-agent
++Replaces: secret-agent
++Description: secure store for secrets (passphrases, etc.)
++ quintuple-agent serves as a cache for secrets, so that you don't have to enter
++ them over and over again. You enter a secret once, and quintuple-agent stores
++ it for a configurable timespan. Programs needing the secret can query the
++ agent for it instead of bothering you.
++ .
++ Included are wrappers for PGP 2 and GnuPG.
+--- quintuple-agent-1.0.4.orig/debian/control
++++ quintuple-agent-1.0.4/debian/control
+@@ -0,0 +1,19 @@
++Source: quintuple-agent
++Section: utils
++Priority: extra
++Maintainer: Norbert Tretkowski <nobse@debian.org>
++Standards-Version: 3.6.1.1
++Build-Depends: debhelper (>= 2.0.0), libglib1.2-dev, libgtk1.2-dev, libcap2-dev [alpha arm hppa i386 ia64 m68k mips mipsel powerpc s390 s390x sh3 sh3eb sh4 sh4eb sparc sparc64 amd64], type-handling (>= 0.2.1), autotools-dev, dpatch
++
++Package: quintuple-agent
++Architecture: any
++Depends: ${shlibs:Depends}
++Conflicts: secret-agent
++Replaces: secret-agent
++Description: secure store for secrets (passphrases, etc.)
++ quintuple-agent serves as a cache for secrets, so that you don't have to enter
++ them over and over again. You enter a secret once, and quintuple-agent stores
++ it for a configurable timespan. Programs needing the secret can query the
++ agent for it instead of bothering you.
++ .
++ Included are wrappers for PGP 2 and GnuPG.
+--- quintuple-agent-1.0.4.orig/debian/91quintuple-agent_q-agent
++++ quintuple-agent-1.0.4/debian/91quintuple-agent_q-agent
+@@ -0,0 +1,10 @@
++# This file is sourced by Xsession(5), not executed.
++
++rcf=/etc/default/quintuple-agent
++if [ -f "$rcf" ]; then
++  . $rcf
++
++  if [ -n "$QAGENT_START" ] && [ "$QAGENT_START" = yes ]; then
++    pidof ${QAGENT##*/} >/dev/null 2>&1 || eval $($QAGENT $QAGENTARG &)
++  fi
++fi
+--- quintuple-agent-1.0.4.orig/debian/Makefile.am
++++ quintuple-agent-1.0.4/debian/Makefile.am
+@@ -0,0 +1,3 @@
++## Process this file with automake to produce Makefile.in
++
++EXTRA_DIST = changelog control copyright docs postinst prerm rules
+--- quintuple-agent-1.0.4.orig/debian/Makefile.in
++++ quintuple-agent-1.0.4/debian/Makefile.in
+@@ -0,0 +1,290 @@
++# Makefile.in generated by automake 1.7.3 from Makefile.am.
++# @configure_input@
++
++# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
++# Free Software Foundation, Inc.
++# This Makefile.in is free software; the Free Software Foundation
++# gives unlimited permission to copy and/or distribute it,
++# with or without modifications, as long as this notice is preserved.
++
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
++# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
++# PARTICULAR PURPOSE.
++
++@SET_MAKE@
++
++srcdir = @srcdir@
++top_srcdir = @top_srcdir@
++VPATH = @srcdir@
++pkgdatadir = $(datadir)/@PACKAGE@
++pkglibdir = $(libdir)/@PACKAGE@
++pkgincludedir = $(includedir)/@PACKAGE@
++top_builddir = ..
++
++am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
++INSTALL = @INSTALL@
++install_sh_DATA = $(install_sh) -c -m 644
++install_sh_PROGRAM = $(install_sh) -c
++install_sh_SCRIPT = $(install_sh) -c
++INSTALL_HEADER = $(INSTALL_DATA)
++transform = $(program_transform_name)
++NORMAL_INSTALL = :
++PRE_INSTALL = :
++POST_INSTALL = :
++NORMAL_UNINSTALL = :
++PRE_UNINSTALL = :
++POST_UNINSTALL = :
++host_triplet = @host@
++ACLOCAL = @ACLOCAL@
++ALLOCA = @ALLOCA@
++AMDEP_FALSE = @AMDEP_FALSE@
++AMDEP_TRUE = @AMDEP_TRUE@
++AMTAR = @AMTAR@
++AUTOCONF = @AUTOCONF@
++AUTOHEADER = @AUTOHEADER@
++AUTOMAKE = @AUTOMAKE@
++AWK = @AWK@
++BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
++CATOBJEXT = @CATOBJEXT@
++CC = @CC@
++CCDEPMODE = @CCDEPMODE@
++CFLAGS = @CFLAGS@
++CPP = @CPP@
++CPPFLAGS = @CPPFLAGS@
++CYGPATH_W = @CYGPATH_W@
++DATADIRNAME = @DATADIRNAME@
++DEFS = @DEFS@
++DEPDIR = @DEPDIR@
++ECHO_C = @ECHO_C@
++ECHO_N = @ECHO_N@
++ECHO_T = @ECHO_T@
++EGREP = @EGREP@
++EXEEXT = @EXEEXT@
++GENCAT = @GENCAT@
++GLIBC21 = @GLIBC21@
++GLIB_CFLAGS = @GLIB_CFLAGS@
++GLIB_CONFIG = @GLIB_CONFIG@
++GLIB_LIBS = @GLIB_LIBS@
++GMSGFMT = @GMSGFMT@
++GTK_CFLAGS = @GTK_CFLAGS@
++GTK_CONFIG = @GTK_CONFIG@
++GTK_LIBS = @GTK_LIBS@
++GTK_STUFF = @GTK_STUFF@
++INSTALL_DATA = @INSTALL_DATA@
++INSTALL_PROGRAM = @INSTALL_PROGRAM@
++INSTALL_SCRIPT = @INSTALL_SCRIPT@
++INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
++INSTOBJEXT = @INSTOBJEXT@
++INTLBISON = @INTLBISON@
++INTLLIBS = @INTLLIBS@
++INTLOBJS = @INTLOBJS@
++INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
++LDFLAGS = @LDFLAGS@
++LIBCAP = @LIBCAP@
++LIBICONV = @LIBICONV@
++LIBINTL = @LIBINTL@
++LIBOBJS = @LIBOBJS@
++LIBS = @LIBS@
++LTLIBICONV = @LTLIBICONV@
++LTLIBINTL = @LTLIBINTL@
++LTLIBOBJS = @LTLIBOBJS@
++MAKEINFO = @MAKEINFO@
++MKINSTALLDIRS = @MKINSTALLDIRS@
++MSGFMT = @MSGFMT@
++MSGMERGE = @MSGMERGE@
++OBJEXT = @OBJEXT@
++PACKAGE = @PACKAGE@
++PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
++PACKAGE_NAME = @PACKAGE_NAME@
++PACKAGE_STRING = @PACKAGE_STRING@
++PACKAGE_TARNAME = @PACKAGE_TARNAME@
++PACKAGE_VERSION = @PACKAGE_VERSION@
++PATH_SEPARATOR = @PATH_SEPARATOR@
++POSUB = @POSUB@
++RANLIB = @RANLIB@
++SETCAP = @SETCAP@
++SET_MAKE = @SET_MAKE@
++SHELL = @SHELL@
++STRIP = @STRIP@
++USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
++USE_NLS = @USE_NLS@
++VERSION = @VERSION@
++XGETTEXT = @XGETTEXT@
++XMESSAGE = @XMESSAGE@
++ac_ct_CC = @ac_ct_CC@
++ac_ct_RANLIB = @ac_ct_RANLIB@
++ac_ct_STRIP = @ac_ct_STRIP@
++am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
++am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
++am__include = @am__include@
++am__leading_dot = @am__leading_dot@
++am__quote = @am__quote@
++bindir = @bindir@
++build = @build@
++build_alias = @build_alias@
++build_cpu = @build_cpu@
++build_os = @build_os@
++build_vendor = @build_vendor@
++datadir = @datadir@
++exec_prefix = @exec_prefix@
++host = @host@
++host_alias = @host_alias@
++host_cpu = @host_cpu@
++host_os = @host_os@
++host_vendor = @host_vendor@
++includedir = @includedir@
++infodir = @infodir@
++install_sh = @install_sh@
++libdir = @libdir@
++libexecdir = @libexecdir@
++localstatedir = @localstatedir@
++mandir = @mandir@
++oldincludedir = @oldincludedir@
++prefix = @prefix@
++program_transform_name = @program_transform_name@
++sbindir = @sbindir@
++sharedstatedir = @sharedstatedir@
++sysconfdir = @sysconfdir@
++target_alias = @target_alias@
++
++EXTRA_DIST = changelog control copyright docs postinst prerm rules
++subdir = debian
++mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
++CONFIG_HEADER = $(top_builddir)/config.h
++CONFIG_CLEAN_FILES =
++DIST_SOURCES =
++DIST_COMMON = Makefile.am Makefile.in
++all: all-am
++
++.SUFFIXES:
++$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
++	cd $(top_srcdir) && \
++	  $(AUTOMAKE) --gnu  debian/Makefile
++Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
++	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)
++uninstall-info-am:
++tags: TAGS
++TAGS:
++
++ctags: CTAGS
++CTAGS:
++
++DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
++
++top_distdir = ..
++distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
++
++distdir: $(DISTFILES)
++	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
++	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
++	list='$(DISTFILES)'; for file in $$list; do \
++	  case $$file in \
++	    $(srcdir)/*) file=`echo "$$file" | sed "s|^$$srcdirstrip/||"`;; \
++	    $(top_srcdir)/*) file=`echo "$$file" | sed "s|^$$topsrcdirstrip/|$(top_builddir)/|"`;; \
++	  esac; \
++	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
++	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
++	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
++	    dir="/$$dir"; \
++	    $(mkinstalldirs) "$(distdir)$$dir"; \
++	  else \
++	    dir=''; \
++	  fi; \
++	  if test -d $$d/$$file; then \
++	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
++	      cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
++	    fi; \
++	    cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
++	  else \
++	    test -f $(distdir)/$$file \
++	    || cp -p $$d/$$file $(distdir)/$$file \
++	    || exit 1; \
++	  fi; \
++	done
++check-am: all-am
++check: check-am
++all-am: Makefile
++
++installdirs:
++
++install: install-am
++install-exec: install-exec-am
++install-data: install-data-am
++uninstall: uninstall-am
++
++install-am: all-am
++	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
++
++installcheck: installcheck-am
++install-strip:
++	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
++	  INSTALL_STRIP_FLAG=-s \
++	  `test -z '$(STRIP)' || \
++	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
++mostlyclean-generic:
++
++clean-generic:
++
++distclean-generic:
++	-rm -f Makefile $(CONFIG_CLEAN_FILES)
++
++maintainer-clean-generic:
++	@echo "This command is intended for maintainers to use"
++	@echo "it deletes files that may require special tools to rebuild."
++clean: clean-am
++
++clean-am: clean-generic mostlyclean-am
++
++distclean: distclean-am
++
++distclean-am: clean-am distclean-generic
++
++dvi: dvi-am
++
++dvi-am:
++
++info: info-am
++
++info-am:
++
++install-data-am:
++
++install-exec-am:
++
++install-info: install-info-am
++
++install-man:
++
++installcheck-am:
++
++maintainer-clean: maintainer-clean-am
++
++maintainer-clean-am: distclean-am maintainer-clean-generic
++
++mostlyclean: mostlyclean-am
++
++mostlyclean-am: mostlyclean-generic
++
++pdf: pdf-am
++
++pdf-am:
++
++ps: ps-am
++
++ps-am:
++
++uninstall-am: uninstall-info-am
++
++.PHONY: all all-am check check-am clean clean-generic distclean \
++	distclean-generic distdir dvi dvi-am info info-am install \
++	install-am install-data install-data-am install-exec \
++	install-exec-am install-info install-info-am install-man \
++	install-strip installcheck installcheck-am installdirs \
++	maintainer-clean maintainer-clean-generic mostlyclean \
++	mostlyclean-generic pdf pdf-am ps ps-am uninstall uninstall-am \
++	uninstall-info-am
++
++# Tell versions [3.59,3.63) of GNU make to not export all variables.
++# Otherwise a system limit (for SysV at least) may be exceeded.
++.NOEXPORT:
+--- quintuple-agent-1.0.4.orig/debian/bash-completion
++++ quintuple-agent-1.0.4/debian/bash-completion
+@@ -0,0 +1,89 @@
++# bash completion for quintuple-agent
++# Copyright 2005 Hans Ulrich Niedermann <debian@n-dimensional.de>
++# License: GNU GPL v2 or later
++#  * only handle completion for q-client
++#  * handles all the common cases
++#  * does not complete IDs for put, TTLs, and query parameters
++#  * allows undefined combinations (stuff like having the same option twice)
++#  * but it still is very useful
++
++have q-client &&
++_q-client()
++{
++	COMPREPLY=()
++
++	local cur prev
++	cur=${COMP_WORDS[COMP_CWORD]}
++	prev="${COMP_WORDS[COMP_CWORD-1]}"
++
++	local commands options
++	commands="put get delete list"
++	options="-d --debug --help --version"
++	options="${options} -i --insure -q --query-options -t --time-to-live"
++
++	# the command itself
++	if [ "x$prev" = "xq-client" ]; then
++		COMPREPLY=($( compgen -W "$commands $options" -- "$cur" ))
++		return 0
++	fi
++
++	# if extglob is on, accept all numbers as TTL
++	if [ "$(shopt extglob | cut -f2)" = "on" ] &&
++	   [ "x$prev" = "x-t" -o "x$prev" = "x--time-to-live" ]
++	then
++		case "$cur" in
++			+([[:digit:]]))
++			COMPREPLY=("$cur")
++			return 0
++			;;
++		esac
++	fi
++
++	COMPREPLY=()
++
++	# walk through the options and commands
++	case "$prev" in
++	get|delete)
++		# list stored items
++		local items
++		items=($(q-client list 2>&1 | cut -f1))
++		if [ "$?" -eq 0 ]; then
++			# only if we could connect to q-agent process
++			COMPREPLY=($( compgen -W "${items[*]}" -- "$cur"))
++		fi
++		;;
++	list)
++		;;
++	put)
++		;;
++	--help)
++		;;
++	--version)
++		;;
++	-i|--insure)
++		COMPREPLY=($( compgen -W "put ${options}" -- "$cur"))
++		;;
++	-d|--debug)
++		COMPREPLY=($( compgen -W "${commands} ${options}" -- "$cur"))
++		;;
++	*)
++		# unhandled, i.e. TTL or query option string
++		if [ "$COMP_CWORD" -ge 2 ]; then
++			local pprev
++			pprev="${COMP_WORDS[COMP_CWORD-2]}"
++			case "$pprev" in
++			-q|--query-options)
++				COMPREPLY=($( compgen -W "put ${options}" -- "$cur"))
++				;;
++			-t|--time-to-live)
++				COMPREPLY=($( compgen -W "put ${options}" -- "$cur"))
++				;;
++			esac
++		fi
++		;;
++	esac
++
++	return 0
++}
++
++[ "$have" ] && complete -F _q-client q-client
+--- quintuple-agent-1.0.4.orig/debian/changelog
++++ quintuple-agent-1.0.4/debian/changelog
+@@ -0,0 +1,125 @@
++quintuple-agent (1.0.4-6) unstable; urgency=medium
++
++  * Added a patch from LaMont Jones, which fixes a memory corruption crash in
++    agpg.c. (closes: #305634)
++
++ -- Norbert Tretkowski <nobse@debian.org>  Tue, 10 May 2005 11:59:26 +0200
++
++quintuple-agent (1.0.4-5) unstable; urgency=low
++
++  * Added bash completion file from Hans Ulrich Niedermann. (closes: #298761)
++  * Really changed priority to extra instead of optional.
++
++ -- Norbert Tretkowski <nobse@debian.org>  Fri, 25 Mar 2005 22:22:35 +0100
++
++quintuple-agent (1.0.4-4) unstable; urgency=low
++
++  * Split out patches and converted to dpatch.
++  * Changed priority to extra instead of optional.
++
++ -- Norbert Tretkowski <nobse@debian.org>  Mon, 21 Feb 2005 22:51:33 +0100
++
++quintuple-agent (1.0.4-3) unstable; urgency=low
++
++  * Fixed useless $STARTQ in 91quintuple-agent_q-agent, thanks to Cristian
++    Ionescu-Idbohrn for his patch. (closes: #296113)
++  * Prevent q-agent from beeing started multiple times, again thanks to
++    Cristian Ionescu-Idbohrn for his suggestion.
++
++ -- Norbert Tretkowski <nobse@debian.org>  Mon, 21 Feb 2005 21:31:25 +0100
++
++quintuple-agent (1.0.4-2) unstable; urgency=low
++
++  * Applied a patch from Joey Hess, which fixes a problem with agpg when using
++    it with gnupg 1.4.x or newer.
++  * Removed useless comments from Xsession.d file.
++
++ -- Norbert Tretkowski <nobse@debian.org>  Tue, 08 Feb 2005 07:02:11 +0100
++
++quintuple-agent (1.0.4-1) unstable; urgency=low
++
++  * New maintainer. (closes: #242809)
++  * Fixed FTBFS on GNU/k*BSD, thanks to Robert Millan for the patch.
++    (closes: #266297)
++  * Start q-agent automatically at the beginning of a login session, thanks to
++    Anand Kumria for the Xsession.d file. (closes: #255452)
++  * Fixed two lintian warnings (spelling errors in debian/control) and and one
++    error (copyright didn't refer to common license file for GPL).
++
++ -- Norbert Tretkowski <nobse@debian.org>  Mon, 07 Feb 2005 13:40:36 +0100
++
++quintuple-agent (1.0.4) unstable; urgency=low
++
++  * The "release early, release often" edition.
++  * Report "agent could not provide passphrase" only when it's true
++    (closes: bug#174311). This was fixed in CVS in July 2001, BTW.
++  * Moved to current autotools.
++  * Updated texi/manpage generation so it works on unstable.
++  * Two compiler warnings eliminated.
++  * Usage of dh_installmanpages is deprecated and was unnecessary, anyway.
++  * Don't install useless README (closes: bug#182532).
++  * Fix "upstream" URLs (closes: bug#168216).
++  * "-g" is now default, so "debug" in DEB_BUILD_OPTIONS is no longer
++    needed; heed "noopt" instead (-O0 instead of -O2). This makes us
++    policy 3.5.8 compliant.
++  * Remove full-stop from short description which is not a sentence.
++
++ -- Robert Bihlmeyer <robbe@debian.org>  Mon, 10 Mar 2003 20:32:42 +0100
++
++quintuple-agent (1.0.3) unstable; urgency=low
++
++  * Plugged some leaks.
++  * Fix remaining time.h warning.
++  * Try to clean without root.
++  * Include info manual in Debian package.
++  * (Build) depend on libcap2(-dev).
++  * Use DH_COMPAT=2. Update debhelper dependency.
++
++ -- Robert Bihlmeyer <robbe@debian.org>  Wed,  4 Jul 2001 00:02:36 +0200
++
++quintuple-agent (1.0.2) unstable; urgency=low
++
++  * Maintainer e-mail changed to @debian.org.
++  * Source package contained symlinks that were only valid if automake and
++    gettext were installed. Fixed (closes: bug#89414).
++  * Upgrade to policy version 3.5.2:
++    + Support 'debug' in DEB_BUILD_OPTIONS.
++
++ -- Robert Bihlmeyer <robbe@orcus.priv.at>  Sun, 18 Mar 2001 10:13:12 +0100
++
++quintuple-agent (1.0.1) unstable; urgency=low
++
++  * Initial upload (closes: bug#80858).
++  * Make it compile with current libc.
++  * Minor shufflings in the build environment so that a clean source pkg
++    is built.
++
++ -- Robert Bihlmeyer <robbe@orcus.priv.at>  Wed, 21 Feb 2001 23:31:42 +0100
++
++quintuple-agent (1.0.0) unstable; urgency=low
++
++  * Name change. Conflict with and replace old package.
++  * Now includes manpages for all binaries.
++  * Removed useless dh_suidregister invocation.
++
++ -- Robert Bihlmeyer <robbe@orcus.priv.at>  Mon, 12 Feb 2001 21:42:00 +0100
++
++secret-agent (0.9) unstable; urgency=low
++
++  * Add Build-Depends.
++  * secret-agent no longer forks per default.
++  * secret-on-demand window comes up with more options to twiddle.
++  * secret-query can be instructed to be less aggressive about grabbing
++    the keyboard.
++
++ -- Robert Bihlmeyer <robbe@orcus.priv.at>  Tue,  3 Oct 2000 20:00:44 +0200
++
++secret-agent (0.8) unstable; urgency=low
++
++  * Initial Debian Release.
++
++ -- Robert Bihlmeyer <robbe@orcus.priv.at>  Fri,  2 Jun 2000 14:23:04 +0200
++
++Local variables:
++mode: debian-changelog
++End:
+--- quintuple-agent-1.0.4.orig/debian/conffiles
++++ quintuple-agent-1.0.4/debian/conffiles
+@@ -0,0 +1,2 @@
++/etc/X11/Xsession.d/91quintuple-agent_q-agent
++/etc/default/quintuple-agent
+--- quintuple-agent-1.0.4.orig/debian/copyright
++++ quintuple-agent-1.0.4/debian/copyright
+@@ -0,0 +1,25 @@
++This is Quintuple Agent, written and maintained by
++Robert Bihlmeyer <robbe@orcus.priv.at>.
++
++The source can always be found at:
++	http://www.vibe.at/tools/q-agent/
++
++Copyright (C) 1999-2003  Robert Bihlmeyer
++
++  This program is free software; you can redistribute it and/or modify
++  it under the terms of the GNU General Public License as published by
++  the Free Software Foundation; either version 2 of the License, or
++  (at your option) any later version.
++
++  This program is distributed in the hope that it will be useful,
++  but WITHOUT ANY WARRANTY; without even the implied warranty of
++  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++  GNU General Public License for more details.
++
++  You should have received a copy of the GNU General Public License with
++  the Debian GNU/Linux distribution in file /usr/share/common-license/GPL;
++  if not, write to the Free Software Foundation, Inc., 59 Temple Place,
++  Suite 330, Boston, MA  02111-1307  USA
++
++On Debian systems the complete text of the GPL is in
++/usr/share/common-licenses/GPL
+--- quintuple-agent-1.0.4.orig/debian/default
++++ quintuple-agent-1.0.4/debian/default
+@@ -0,0 +1,3 @@
++QAGENT_START=yes
++QAGENT=/usr/bin/q-agent
++QAGENT_ARGS=
+--- quintuple-agent-1.0.4.orig/debian/docs
++++ quintuple-agent-1.0.4/debian/docs
+@@ -0,0 +1,2 @@
++BUGS
++NEWS
+--- quintuple-agent-1.0.4.orig/debian/postinst
++++ quintuple-agent-1.0.4/debian/postinst
+@@ -0,0 +1,7 @@
++#!/bin/sh -e
++
++if [ "$1" = "configure" ]; then
++	install-info --quiet --section Miscellaneous Miscellaneous --menuentry="Quintuple Agent" --description="A program that stores secrets for you." /usr/share/info/q-agent.info
++fi
++
++#DEBHELPER#
+--- quintuple-agent-1.0.4.orig/debian/prerm
++++ quintuple-agent-1.0.4/debian/prerm
+@@ -0,0 +1,5 @@
++#!/bin/sh -e
++
++install-info --quiet --remove /usr/share/info/q-agent.info
++
++#DEBHELPER#
+--- quintuple-agent-1.0.4.orig/debian/rules
++++ quintuple-agent-1.0.4/debian/rules
+@@ -0,0 +1,81 @@
++#!/usr/bin/make -f
++# GNU copyright 1997 to 1999 by Joey Hess.
++# Copyright (C) 2000,2001 by Robert Bihlmeyer.
++
++export DH_COMPAT=2
++
++PKGDIR = debian/quintuple-agent
++DOCDIR = $(PKGDIR)/usr/share/doc/quintuple-agent
++
++INSTALL_DATA = install -o root -g root -p -m644
++
++CFLAGS = -Wall -g
++ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
++  CFLAGS += -O0
++else
++  CFLAGS += -O2
++endif
++
++include /usr/share/dpatch/dpatch.make
++
++build: build-stamp
++build-stamp: patch
++	dh_testdir
++
++	./configure --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info --enable-debug="$(CFLAGS)"
++	# Add here commands to compile the package.
++	$(MAKE)
++
++	touch build-stamp
++
++clean: unpatch
++	dh_testdir
++
++	# Add here commands to clean up after the build process.
++	-$(MAKE) distclean
++
++	cat debian/control.in \
++		| sed "s/@linux-gnu@/`type-handling any linux-gnu`/g" \
++		> debian/control
++	cp /usr/share/misc/config.* ./
++
++	dh_clean
++
++install: build
++	dh_testdir
++	dh_testroot
++	dh_clean -k
++	dh_installdirs usr/share/info
++
++	$(MAKE) install prefix=`pwd`/$(PKGDIR)/usr
++
++	mkdir -p $(PKGDIR)/etc/X11/Xsession.d/
++	cp debian/91quintuple-agent_q-agent $(PKGDIR)/etc/X11/Xsession.d/
++	mkdir -p $(PKGDIR)/etc/default/
++	cp debian/default $(PKGDIR)/etc/default/quintuple-agent
++	mkdir -p $(PKGDIR)/etc/bash_completion.d/
++	cp debian/bash-completion $(PKGDIR)/etc/bash_completion.d/quintuple-agent
++
++# Build architecture-independent files here.
++binary-indep: build install
++# We have nothing to do by default.
++
++# Build architecture-dependent files here.
++binary-arch: build install
++	dh_testdir
++	dh_testroot
++	dh_installdocs
++	$(INSTALL_DATA) doc/manual.info $(PKGDIR)/usr/share/info/q-agent.info
++	$(INSTALL_DATA) ChangeLog $(DOCDIR)/changelog
++	$(INSTALL_DATA) debian/changelog $(DOCDIR)/changelog.Debian
++	dh_strip
++	dh_compress
++	dh_fixperms
++	dh_installdeb
++	dh_shlibdeps
++	dh_gencontrol
++	dh_md5sums
++	dh_builddeb
++
++binary: binary-indep binary-arch
++.PHONY: build clean binary-indep binary-arch binary install unpatch

@@ -1,0 +1,19 @@
+Possible enhancements
+=====================
+
+* A way to delete all secrets at once
+* Means to configure default properties of secrets
+* A message type that kills the agent
+
+
+Long term ideas
+===============
+
+* Store keys instead of just passphrases: this would need different
+  backends/plugins for different tools
+
+
+Needs help
+==========
+
+* Microsoft Windows and/or Cygwin port

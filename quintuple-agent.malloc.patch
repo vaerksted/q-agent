@@ -1,0 +1,12 @@
+diff -ur quintuple-agent-1.0.4-5/agpg.c quintuple-agent-1.0.4/agpg.c
+--- quintuple-agent-1.0.4-5/agpg.c	2002-09-28 01:16:01.000000000 -0600
++++ quintuple-agent-1.0.4/agpg.c	2005-05-09 19:04:56.000000000 -0600
+@@ -175,7 +175,7 @@
+     int i;
+ 
+     close(p[1]);
+-    args = malloc(sizeof(char *) * (argc + 2));
++    args = malloc(sizeof(char *) * (argc + 3));
+     if (!args) {
+       fprintf(stderr, _("out of memory\n"));
+       return EXIT_FAILURE;

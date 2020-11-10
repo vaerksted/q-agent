@@ -1,0 +1,18 @@
+2019-12-16  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* gettext.m4: Upgrade to gettext-0.19.8.1.
+	* iconv.m4: Upgrade to gettext-0.19.8.1.
+	* lib-ld.m4: Upgrade to gettext-0.19.8.1.
+	* lib-link.m4: Upgrade to gettext-0.19.8.1.
+	* lib-prefix.m4: Upgrade to gettext-0.19.8.1.
+	* nls.m4: New file, from gettext-0.19.8.1.
+	* po.m4: New file, from gettext-0.19.8.1.
+	* progtest.m4: Upgrade to gettext-0.19.8.1.
+
+2003-02-08  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* codeset.m4 gettext.m4, glibc21.m4, iconv.m4, intdiv0.m4,
+	inttypes.m4, inttypes_h.m4, inttypes-pri.m4, isc-posix.m4,
+	lcmessage.m4, lib-ld.m4, lib-link.m4, lib-prefix.m4, progtest.m4,
+	stdint_h.m4, uintmax_t.m4, ulonglong.m4, Makefile.am:
+	New files, from gettext-0.11.5.

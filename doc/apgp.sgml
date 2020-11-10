@@ -1,0 +1,93 @@
+<!-- apgp.sgml - man page source for apgp -->
+<!DOCTYPE RefEntry PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+  <!ENTITY trailer SYSTEM "trailer.sgml">
+]>
+
+<refentry>
+  <refmeta>
+    <refentrytitle>apgp</refentrytitle>
+    <manvolnum>1</manvolnum>
+    <refmiscinfo>Quintuple Agent</refmiscinfo>
+  </refmeta>
+  <refnamediv>
+    <refname>apgp</refname>
+    <refpurpose>wrapper around <command>pgp</command> that provides
+    passphrases for you</refpurpose>
+  </refnamediv>
+  <refsynopsisdiv>
+    <cmdsynopsis>
+      <command>apgp</command>
+      <arg rep=repeat><replaceable>OPTION</replaceable></arg>
+      <arg><replaceable>FILE</replaceable></arg>
+      <arg rep=repeat><replaceable>USERID</replaceable></arg>
+    </cmdsynopsis>
+  </refsynopsisdiv>
+  <refsect1>
+    <title>Description</title>
+    <para>When <command/q-agent/ is running, <command/apgp/ can
+    be used instead of <command/pgp/, and it will try to get all
+    necessary passphrases from the agent instead of asking you
+    directly.</para>
+    <para>Since all arguments are handed off to <command/pgp/
+    verbatim, the interface of <command/apgp/ is exactly the same as
+    that of <command/pgp/.</para>
+    <para>The following <command/pgp/ options will influence the
+    behaviour of <command/apgp/ itself:</para>
+    <variablelist>
+      <varlistentry>
+        <term><option/-u/, <option/+myname/ <replaceable/NAME/</term>
+	<listitem>
+	  <para>informs <command/apgp/ that it should provide the
+	  passphrase for the key indicated by
+	  <replaceable/NAME/.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><option/--version/</term>
+	<listitem>
+	  <para><command/apgp/ will output its version, too.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>Compatibility</title>
+    <para><command/apgp/ is inteded to work only with <command/pgp/
+    versions that start with <literal/2.6/.</para>
+  </refsect1>
+  <refsect1>
+    <title>Environment</title>
+    <variablelist>
+      <varlistentry>
+	<term>AGENT_SOCKET</term>
+	<listitem>
+	  <para><command/apgp/ will use this variable to find the socket for
+communicating with the agent.</para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>PGPPASSFD</term>
+	<listitem>
+	  <para>Because this variable is used by <command/apgp/
+	  itself, any value inherited from a calling process will be
+	  effectively ignored.</para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </refsect1>
+  <refsect1>
+    <title>See Also</title>
+    <simplelist>
+      <member><citerefentry>
+	  <refentrytitle>q-agent<manvolnum/1/
+	</citerefentry></member>
+      <member><citerefentry>
+	  <refentrytitle>q-client<manvolnum/1/
+	</citerefentry></member>
+      <member><citerefentry>
+	  <refentrytitle>agpg<manvolnum/1/
+	</citerefentry></member>
+    </simplelist>
+  </refsect1>
+&trailer;
+</refentry>
